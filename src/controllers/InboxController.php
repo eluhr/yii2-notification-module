@@ -4,7 +4,6 @@ namespace eluhr\notification\controllers;
 
 
 use eluhr\notification\assets\BackendNotificationAsset;
-use eluhr\notification\assets\NotificationAsset;
 use eluhr\notification\components\helpers\Permission;
 use eluhr\notification\models\InboxMessage;
 use eluhr\notification\models\Message;
@@ -36,7 +35,15 @@ class InboxController extends Controller
             'rules' => [
                 [
                     'allow' => true,
-                    'actions' => ['index', 'read', 'delete-inbox-message', 'sent', 'read-sent', 'delete-user-group'],
+                    'actions' => [
+                        'index',
+                        'read',
+                        'delete-inbox-message',
+                        'sent',
+                        'read-sent',
+                        'delete-user-group',
+                        'mark-inbox-message'
+                    ],
                     'roles' => ['@'],
                 ],
                 [
@@ -59,6 +66,7 @@ class InboxController extends Controller
             'class' => VerbFilter::class,
             'actions' => [
                 'delete-inbox-message' => ['POST'],
+                'mark-inbox-message' => ['POST'],
                 'delete-user-group' => ['POST']
             ]
         ];
@@ -75,6 +83,32 @@ class InboxController extends Controller
     {
         BackendNotificationAsset::register($action->controller->view);
         return parent::beforeAction($action);
+    }
+
+    /**
+     * @param $inbox_message_id
+     *
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function actionMarkInboxMessage($inbox_message_id)
+    {
+        /** @var InboxMessage|null $inbox_message_model */
+        $inbox_message_model = InboxMessage::find()->own()->andWhere(['id' => $inbox_message_id])->one();
+
+        if ($inbox_message_model === null) {
+            throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
+        }
+
+        $inbox_message_model->marked = !(int)$inbox_message_model->marked;
+
+        if (!$inbox_message_model->save()) {
+            Yii::$app->session->addFlash('info',
+                Yii::t('notification', 'Cannot update read status of this message.'));
+        }
+
+        return $this->redirect(Yii::$app->request->referrer ?? ['index']);
     }
 
     /**

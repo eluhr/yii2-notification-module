@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm;
         ?>
         <div class="btn-group btn-group-sm pull-left">
             <div class="btn">
-                <?=$form->field($inbox_message_search_model,'sort')->checkbox(['class' => 'hidden'], false)->label(FA::icon(FA::_FILTER))?>
+                <?=$form->field($inbox_message_search_model,'sort')->checkbox(['class' => 'hidden'], false)->label(FA::icon(empty($inbox_message_search_model->sort) || $inbox_message_search_model->sort === '0' ? FA::_SORT_NUMERIC_ASC : FA::_SORT_NUMERIC_DESC))?>
             </div>
         </div>
         <div class="input-group input-group-sm pull-right">

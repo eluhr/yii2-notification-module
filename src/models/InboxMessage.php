@@ -18,6 +18,7 @@ use Yii;
  * @property int $message_id
  * @property User $receiver
  * @property int $receiver_id
+ * @property int $marked
  * @property InboxMessage $next
  * @property InboxMessage $previous
  * @property string $read

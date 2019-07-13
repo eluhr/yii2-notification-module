@@ -10,6 +10,7 @@ use eluhr\notification\models\MessageUserGroup;
 use eluhr\notification\models\search\InboxMessage as InboxMessageSearch;
 use rmrevin\yii\fontawesome\FA;
 use Yii;
+use yii\bootstrap\ButtonDropdown;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -56,6 +57,14 @@ class Inbox
             'columns' => [
                 [
                     'value' => function (InboxMessage $model) {
+                        return Html::a(FA::icon((int)$model->marked === 0 ? FA::_FLAG_O : FA::_FLAG,
+                            ['class' => 'text-warning']), ['mark-inbox-message', 'inbox_message_id' => $model->id],
+                            ['data-method' => 'post', 'class' => 'no-border']);
+                    },
+                    'format' => 'raw'
+                ],
+                [
+                    'value' => function (InboxMessage $model) {
                         return $model->receiver->username;
                     }
                 ],
@@ -71,7 +80,44 @@ class Inbox
                 ],
                 [
                     'value' => function (InboxMessage $model) {
-                        return Html::tag('b', str_repeat('!',$model->message->priority));
+                        return Html::tag('b', str_repeat('!', $model->message->priority));
+                    },
+                    'format' => 'raw'
+                ],
+                [
+                    'value' => function (InboxMessage $model) {
+                        return ButtonDropdown::widget([
+                            'label' => FA::icon(FA::_ELLIPSIS_H),
+                            'encodeLabel' => false,
+                            'dropdown' => [
+                                'items' => [
+                                    [
+                                        'label' => Yii::t('notification', 'Read'),
+                                        'url' => ['read','inbox_message_id' => $model->id]
+                                    ],
+                                    [
+                                        'label' => (int)$model->marked === 0 ? Yii::t('notification',
+                                            'Mark') : Yii::t('notification', 'Unmark'),
+                                        'url' => ['mark-inbox-message', 'inbox_message_id' => $model->id],
+                                        'linkOptions' => [
+                                            'data-method' => 'post',
+                                            'class' => 'text-danger no-border',
+                                        ]
+                                    ],
+                                    [
+                                        'label' => Yii::t('notification', 'Delete'),
+                                        'url' => [
+                                            'delete-inbox-message',
+                                            'inbox_message_id' => $model->id,
+                                        ],
+                                        'linkOptions' => [
+                                            'class' => 'text-danger no-border',
+                                            'data-method' => 'post'
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]);
                     },
                     'format' => 'raw'
                 ]
@@ -131,6 +177,34 @@ class Inbox
                         return Html::tag('span', $label, ['class' => 'label label-primary']);
                     },
                     'format' => 'raw'
+                ],
+                [
+                    'value' => function (MessageUserGroup $model) {
+                        return ButtonDropdown::widget([
+                            'label' => FA::icon(FA::_ELLIPSIS_H),
+                            'encodeLabel' => false,
+                            'dropdown' => [
+                                'items' => [
+                                    [
+                                        'label' => Yii::t('notification', 'Edit'),
+                                        'url' => ['user-group-edit','message_user_group_id' => $model->id]
+                                    ],
+                                    [
+                                        'label' => Yii::t('notification', 'Delete'),
+                                        'url' => [
+                                            'delete-user-group',
+                                            'message_user_group_id' => $model->id,
+                                        ],
+                                        'linkOptions' => [
+                                            'class' => 'text-danger no-border',
+                                            'data-method' => 'post'
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]);
+                    },
+                    'format' => 'raw'
                 ]
             ]
         ];
@@ -177,7 +251,24 @@ class Inbox
                 ],
                 [
                     'value' => function (Message $model) {
-                        return Html::tag('b', str_repeat('!',$model->priority));
+                        return Html::tag('b', str_repeat('!', $model->priority));
+                    },
+                    'format' => 'raw'
+                ],
+                [
+                    'value' => function (Message $model) {
+                        return ButtonDropdown::widget([
+                            'label' => FA::icon(FA::_ELLIPSIS_H),
+                            'encodeLabel' => false,
+                            'dropdown' => [
+                                'items' => [
+                                    [
+                                        'label' => Yii::t('notification', 'Read'),
+                                        'url' => ['read-sent','message_id' => $model->id]
+                                    ]
+                                ]
+                            ]
+                        ]);
                     },
                     'format' => 'raw'
                 ]
