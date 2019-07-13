@@ -89,6 +89,9 @@ class Inbox
                         return ButtonDropdown::widget([
                             'label' => FA::icon(FA::_ELLIPSIS_H),
                             'encodeLabel' => false,
+                            'containerOptions' => [
+                                'class' => 'pull-right'
+                            ],
                             'dropdown' => [
                                 'items' => [
                                     [
@@ -183,6 +186,9 @@ class Inbox
                         return ButtonDropdown::widget([
                             'label' => FA::icon(FA::_ELLIPSIS_H),
                             'encodeLabel' => false,
+                            'containerOptions' => [
+                                'class' => 'pull-right'
+                            ],
                             'dropdown' => [
                                 'items' => [
                                     [
@@ -260,6 +266,9 @@ class Inbox
                         return ButtonDropdown::widget([
                             'label' => FA::icon(FA::_ELLIPSIS_H),
                             'encodeLabel' => false,
+                            'containerOptions' => [
+                                'class' => 'pull-right'
+                            ],
                             'dropdown' => [
                                 'items' => [
                                     [

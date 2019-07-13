@@ -85,7 +85,6 @@ More infos coming soon
 
 The following stuff will probably come in a future release
 
-- Mark (inbox) message with like a star or something
 - Draft messages for later use
 - Ability to remove messages
 - Mark messages from users with a label or something
