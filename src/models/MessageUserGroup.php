@@ -169,4 +169,15 @@ class MessageUserGroup extends ActiveRecord
         return $rules;
     }
 
+    /**
+     * @return array
+     */
+    public function attributeLabels()
+    {
+        $attributeLabels = parent::attributeLabels();
+        $attributeLabels['receiver_ids'] = Yii::t('notification','Receivers');
+        $attributeLabels['name'] = Yii::t('notification','Name');
+        return $attributeLabels;
+    }
+
 }

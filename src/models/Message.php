@@ -251,4 +251,16 @@ class Message extends ActiveRecord
         // convert receiver ids to array and make the array unique
         return array_unique(array_map('intval', $receiver_ids));
     }
+
+    /**
+     * @return array
+     */
+    public function attributeLabels()
+    {
+        $attributeLabels = parent::attributeLabels();
+        $attributeLabels['receiver_ids'] = Yii::t('notification', 'Receivers');
+        $attributeLabels['subject'] = Yii::t('notification', 'Subject');
+        $attributeLabels['text'] = Yii::t('notification', 'Message');
+        return $attributeLabels;
+    }
 }
