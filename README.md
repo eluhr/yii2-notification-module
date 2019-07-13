@@ -87,12 +87,8 @@ The following stuff will probably come in a future release
 
 - Mark (inbox) message with like a star or something
 - Draft messages for later use
-- Send a copy of message to yourself (checkbox)
 - Ability to remove messages
-- See receivers in sent messages
 - Mark messages from users with a label or something
 - Notification Widget (AdminLTE)
-- Print button for (inbox) message
 - Delete (inbox) message in overview (three dots option edit)
-- More filter in (inbox) message in overview e.g. order by send date
-- Message priority (three stages, urgent, important & very important)
+- Translation config

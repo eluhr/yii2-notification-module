@@ -13,6 +13,7 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\i18n\Formatter;
 use yii\widgets\LinkPager;
 
 /**
@@ -47,6 +48,10 @@ class Inbox
                 ];
             },
             'showHeader' => false,
+            'formatter' => [
+                'class' => Formatter::class,
+                'nullDisplay' => ''
+            ],
             'emptyText' => Yii::t('notification', 'You have read all messages in your inbox!'),
             'columns' => [
                 [
@@ -63,6 +68,12 @@ class Inbox
                     'value' => function (InboxMessage $model) {
                         return Yii::$app->formatter->asRelativeTime($model->message->send_at);
                     }
+                ],
+                [
+                    'value' => function (InboxMessage $model) {
+                        return Html::tag('b', str_repeat('!',$model->message->priority));
+                    },
+                    'format' => 'raw'
                 ]
             ]
         ];
@@ -110,10 +121,12 @@ class Inbox
                         $receivers_count = count($model->receivers);
                         if (!empty($model->receivers) && $receivers_count > 1) {
                             $label = $model->receivers[0]->username . ' +' . ($receivers_count - 1);
-                        } else if ($receivers_count === 0) {
-                            $label = 0;
                         } else {
-                            $label = $model->receivers[0]->username;
+                            if ($receivers_count === 0) {
+                                $label = 0;
+                            } else {
+                                $label = $model->receivers[0]->username;
+                            }
                         }
                         return Html::tag('span', $label, ['class' => 'label label-primary']);
                     },
@@ -161,6 +174,12 @@ class Inbox
                     'value' => function (Message $model) {
                         return Yii::$app->formatter->asRelativeTime($model->send_at);
                     }
+                ],
+                [
+                    'value' => function (Message $model) {
+                        return Html::tag('b', str_repeat('!',$model->priority));
+                    },
+                    'format' => 'raw'
                 ]
             ]
         ];

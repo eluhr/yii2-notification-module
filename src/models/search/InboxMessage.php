@@ -15,10 +15,12 @@ use yii\data\ActiveDataProvider;
  * --- PROPERTIES ---
  *
  * @property string $q
+ * @property integer $sort
  */
 class InboxMessage extends InboxMessageModel
 {
     public $q;
+    public $sort;
 
     /**
      * @return string
@@ -34,7 +36,8 @@ class InboxMessage extends InboxMessageModel
     public function rules()
     {
         return [
-            ['q', 'safe']
+            [['q','sort'], 'safe'],
+            ['sort', 'integer']
         ];
     }
 
@@ -65,7 +68,7 @@ class InboxMessage extends InboxMessageModel
         $query->orFilterWhere(['LIKE', 'username', $this->q]);
 
         $query->andWhere(['read' => (int)$read]);
-        $query->orderBy(['created_at' => SORT_DESC]);
+        $query->orderBy(['send_at' => empty($this->sort) || $this->sort === '0' ? SORT_DESC : SORT_ASC]);
         $query->own();
 
         return $active_data_provider;

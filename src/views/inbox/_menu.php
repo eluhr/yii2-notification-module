@@ -26,6 +26,7 @@ use yii\helpers\Url;
                     <span class="label label-primary pull-right"><?= InboxMessage::find()->own()->andWhere(['read' => 0])->count() ?></span>
                 </a>
             </li>
+            <?php if (Yii::$app->user->can(Permission::COMPOSE_A_MESSAGE)): ?>
             <li class="<?= Yii::$app->controller->action->id === 'sent' || Yii::$app->controller->action->id === 'read-sent' ? 'active' : null ?>">
                 <a href="<?= Url::to(['sent']) ?>">
                     <?= FA::icon(FA::_ENVELOPE_O) ?>
@@ -33,6 +34,7 @@ use yii\helpers\Url;
                     <span class="label label-default pull-right"><?= Message::find()->andWhere(['author_id' => Yii::$app->user->id])->count() ?></span>
                 </a>
             </li>
+            <?php endif; ?>
             <?php if (Yii::$app->user->can(Permission::USER_GROUPS)): ?>
                 <li class="<?= Yii::$app->controller->action->id === 'user-group' || Yii::$app->controller->action->id === 'user-group-edit' ? 'active' : null ?>">
                     <a href="<?= Url::to(['user-group']) ?>">

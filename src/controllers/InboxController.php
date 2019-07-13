@@ -3,6 +3,7 @@
 namespace eluhr\notification\controllers;
 
 
+use eluhr\notification\assets\BackendNotificationAsset;
 use eluhr\notification\assets\NotificationAsset;
 use eluhr\notification\components\helpers\Permission;
 use eluhr\notification\models\InboxMessage;
@@ -72,7 +73,7 @@ class InboxController extends Controller
      */
     public function beforeAction($action)
     {
-        NotificationAsset::register($action->controller->view);
+        BackendNotificationAsset::register($action->controller->view);
         return parent::beforeAction($action);
     }
 

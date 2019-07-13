@@ -16,9 +16,9 @@ use yii\web\View;
 $this->beginContent(__DIR__ . '/notification-layout.php');
 ?>
 
-<div class="box-body no-padding">
+<div class="box-body no-padding" id="message-box">
 
-    <div class="box-header">
+    <div class="box-header hidden-print">
         <div class="btn-group pull-right">
             <?php
             $previous_message_model = $message_model->previous;
@@ -35,11 +35,18 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
     <div class="mailbox-read-info">
         <h3><?= $message_model->subject ?></h3>
         <h5><?= Yii::t('notification', 'From: {author-username}',
-                ['author-username' => $message_model->author->username]) ?>
+                ['author-username' => $message_model->author->username]) ?></h5>
+        <h5><?= Yii::t('notification', 'To: {receiver-names}', ['receiver-names' => $message_model->receiverLabels()]) ?>
             <span class="mailbox-read-time pull-right"><?= Yii::$app->formatter->asRelativeTime($message_model->send_at) ?></span>
         </h5>
     </div>
-    <div class="mailbox-controls with-border text-center">
+    <div class="mailbox-controls with-border text-center hidden-print">
+        <div class="btn-group">
+            <?= Html::a(FA::icon(FA::_PRINT), 'javascript:void(0)', [
+                'class' => 'btn btn-default btn-sm',
+                'data-print' => 'message-box'
+            ]) ?>
+        </div>
         <div class="btn-group">
             <?php if (Yii::$app->user->can(Permission::COMPOSE_A_MESSAGE)): ?>
                 <?= Html::a(FA::icon(FA::_REPLY), [

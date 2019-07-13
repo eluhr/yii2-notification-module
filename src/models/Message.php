@@ -4,10 +4,11 @@ namespace eluhr\notification\models;
 
 use Da\User\Model\User;
 use eluhr\notification\components\helpers\Permission;
+use eluhr\notification\components\helpers\User as UserHelper;
 use eluhr\notification\models\query\Message as MessageQuery;
 use Yii;
-use eluhr\notification\components\helpers\User as UserHelper;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 /**
  * @package eluhr\notification\models
@@ -18,15 +19,21 @@ use yii\helpers\ArrayHelper;
  * @property int $id
  * @property User $author
  * @property int $author_id
+ * @property string $all_receiver_ids
  * @property string $subject
  * @property string $text
  * @property string $send_at
+ * @property string $priority
  * @property \yii\db\ActiveRecord|null|array $previous
  * @property \yii\db\ActiveRecord|null|array $next
+ * @property string $receiver_names
  * @property int[] $receiver_ids Array of user id's
  */
 class Message extends ActiveRecord
 {
+    const PRIORITY_LOW = 0;
+    const PRIORITY_NORMAL = 1;
+    const PRIORITY_HIGH = 2;
 
     public $receiver_ids;
 
@@ -36,6 +43,43 @@ class Message extends ActiveRecord
     public static function tableName()
     {
         return '{{%message}}';
+    }
+
+    /**
+     * @return array
+     */
+    public function getReceiver_names()
+    {
+        $receiver_models = User::findAll(['id' => explode(',', $this->all_receiver_ids)]);
+        $receiver_names = [];
+        foreach ($receiver_models as $receiver_model) {
+            $receiver_names[] = $receiver_model->username;
+        }
+        return $receiver_names;
+    }
+
+    /**
+     * @return string
+     */
+    public function receiverLabels()
+    {
+        $labels = [];
+        foreach ((array)$this->receiver_names as $receiver_name) {
+            $labels[] = Html::tag('span',$receiver_name,['class' => 'label label-primary']);
+        }
+        return implode(' ', $labels);
+    }
+
+    /**
+     * @return array
+     */
+    public static function priorities()
+    {
+        return [
+            static::PRIORITY_HIGH => Yii::t('notification', 'High priority'),
+            static::PRIORITY_NORMAL => Yii::t('notification', 'Normal priority'),
+            static::PRIORITY_LOW => Yii::t('notification', 'Low priority')
+        ];
     }
 
     /**
@@ -106,6 +150,7 @@ class Message extends ActiveRecord
             'targetAttribute' => ['author_id' => 'id']
         ];
         $rules['safe-rule'] = ['send_at', 'safe'];
+        $rules['int-rule'] = ['priority', 'integer'];
         return $rules;
     }
 
