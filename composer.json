@@ -16,6 +16,10 @@
         "kartik-v/yii2-widget-select2": "^2.0.1",
         "2amigos/yii2-ckeditor-widget": "^2.0.2"
     },
+    "require-dev": {
+        "codeception/codeception": "^2.2",
+        "dmstr/yii2-db": "^0.9.4"
+    },
     "autoload": {
         "psr-4": {
             "eluhr\\notification\\": "src"

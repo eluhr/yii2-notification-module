@@ -25,8 +25,8 @@ class m190709_154647_add_needed_tables extends Migration
 
         $this->execute(<<<SQL
 CREATE TABLE IF NOT EXISTS `{$user_group_table_name}` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `owner_id` INT NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `owner_id` INT(11) NOT NULL,
   `name` VARCHAR(80) NOT NULL,
   `created_at` DATETIME NULL,
   `updated_at` DATETIME NULL,
@@ -40,8 +40,8 @@ CREATE TABLE IF NOT EXISTS `{$user_group_table_name}` (
     ON UPDATE NO ACTION);
 
 CREATE TABLE IF NOT EXISTS `{$user_group_x_user_table_name}` (
-  `message_user_group_id` INT NOT NULL,
-  `receiver_id` INT NOT NULL,
+  `message_user_group_id` INT(11) NOT NULL,
+  `receiver_id` INT(11) NOT NULL,
   `created_at` DATETIME NULL,
   `updated_at` DATETIME NULL,
   PRIMARY KEY (`message_user_group_id`, `receiver_id`),
@@ -59,8 +59,8 @@ CREATE TABLE IF NOT EXISTS `{$user_group_x_user_table_name}` (
     ON UPDATE CASCADE);
 
 CREATE TABLE IF NOT EXISTS `{$message_table_name}` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `author_id` INT NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `author_id` INT(11) NOT NULL,
   `subject` VARCHAR(128) NOT NULL,
   `text` TEXT(1024) NOT NULL,
   `send_at` DATETIME NULL,
@@ -75,9 +75,9 @@ CREATE TABLE IF NOT EXISTS `{$message_table_name}` (
     ON UPDATE NO ACTION);
 
 CREATE TABLE IF NOT EXISTS `{$inbox_message_table_name}` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `message_id` INT NOT NULL,
-  `receiver_id` INT NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `message_id` INT(11) NOT NULL,
+  `receiver_id` INT(11) NOT NULL,
   `read` TINYINT(1) NULL DEFAULT 0,
   `created_at` DATETIME NULL,
   `updated_at` DATETIME NULL,
