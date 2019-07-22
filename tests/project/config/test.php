@@ -9,6 +9,7 @@ use yii\i18n\PhpMessageSource;
 use yii\web\User as WebUser;
 
 Yii::$classMap[NotificationModule::class] = '/repo/src/Module.php';
+Yii::$classMap[MysqlController::class] = '/repo/tests/project/controllers/MysqlController.php';
 
 return [
     'aliases' => [
@@ -42,7 +43,7 @@ return [
         ],
     ],
     'controllerMap' => [
-        'db' => '\dmstr\console\controllers\MysqlController',
+        'db' => MysqlController::class,
         'migrate' => [
             'class' => MigrateController::class,
             'migrationPath' => [

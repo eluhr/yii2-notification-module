@@ -31,8 +31,11 @@ INSERT INTO `auth_assignment` (`item_name`, `user_id`, `created_at`)
 VALUES
 	('notification.compose_a_message', '1', NULL),
 	('notification.compose_a_message', '2', NULL),
+	('notification.compose_a_message', '3', NULL),
 	('notification.send_mail_to_everyone', '1', NULL),
-	('notification.user_group', '2', NULL);
+	('notification.user_group', '2', NULL),
+	('notification.send_priority_mail', '3', NULL),
+	('NotificationAdmin', '4', NULL);
 SQL
 );
     }

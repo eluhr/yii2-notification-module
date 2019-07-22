@@ -1,3 +1,4 @@
 *.bak
 vendor
 composer.lock
+tests/codeception/_output
