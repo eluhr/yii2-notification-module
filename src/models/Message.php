@@ -238,7 +238,7 @@ class Message extends ActiveRecord
     public static function receiverIdsByPossibleRecipients($possible_recipients)
     {
         $receiver_ids = [];
-        foreach ($possible_recipients as $receiver_id) {
+        foreach ((array)$possible_recipients as $receiver_id) {
             $message_user_group_receiver_ids = MessageUserGroup::receiverIdsByUniqueId($receiver_id);
 
             if (is_array($message_user_group_receiver_ids)) {

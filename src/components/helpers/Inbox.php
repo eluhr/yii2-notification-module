@@ -35,6 +35,7 @@ class Inbox
             'dataProvider' => $data_provider,
             'pager' => [
                 'class' => LinkPager::class,
+                'maxButtonCount' => 5,
                 'firstPageLabel' => FA::icon(FA::_CHEVRON_LEFT),
                 'lastPageLabel' => FA::icon(FA::_CHEVRON_RIGHT),
             ],
@@ -65,7 +66,7 @@ class Inbox
                 ],
                 [
                     'value' => function (InboxMessage $model) {
-                        return $model->receiver->username;
+                        return $model->message->author->username;
                     }
                 ],
                 [
@@ -140,6 +141,7 @@ class Inbox
             'dataProvider' => $data_provider,
             'pager' => [
                 'class' => LinkPager::class,
+                'maxButtonCount' => 5,
                 'firstPageLabel' => FA::icon(FA::_CHEVRON_LEFT),
                 'lastPageLabel' => FA::icon(FA::_CHEVRON_RIGHT),
             ],
@@ -228,6 +230,7 @@ class Inbox
             'dataProvider' => $data_provider,
             'pager' => [
                 'class' => LinkPager::class,
+                'maxButtonCount' => 5,
                 'firstPageLabel' => FA::icon(FA::_CHEVRON_LEFT),
                 'lastPageLabel' => FA::icon(FA::_CHEVRON_RIGHT),
             ],

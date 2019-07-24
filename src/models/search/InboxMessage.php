@@ -56,6 +56,11 @@ class InboxMessage extends InboxMessageModel
 
         $active_data_provider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'defaultPageSize' => 10,
+                'pageParam' => ((int)$read === 0 ? 'inbox' : 'seen') . '-page',
+                'pageSizeParam' => ((int)$read === 0 ? 'inbox' : 'seen') . '-per-page'
+            ]
         ]);
 
         $this->load($params);

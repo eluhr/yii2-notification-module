@@ -31,11 +31,27 @@ use eluhr\notification\Module as NotificationModule;
 ]
 ...
 ````
+
+## Example 
+
+Inbox from the point of view of a user with all authorizations
+![Example inbox](./docs/images/inbox.png)
+
+
+| Write a message to individual users or entire user groups  | Search messages by subject, author or text          |
+|------------------------------------------------------------|-----------------------------------------------------|
+| ![Compse message](./docs/images/compose-a-new-message.png) | ![Filtered inbox](./docs/images/filtered-inbox.png) |
+
+| Group users to create your own personal user groups | Mark, read or delete messages                    |      
+|-----------------------------------------------------|--------------------------------------------------|
+| ![User group](./docs/images/user-groups.png)        | ![User group](./docs/images/message-options.png) |
+
+
 ### Worth knowing
 
 Requires PHP version >= 7.*
 
-## Example
+## Example usuage
 
 ```php
 ExampleModel extends ActiveRecord implements ModelChangeNotification {
