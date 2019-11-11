@@ -13,18 +13,18 @@ class m190709_154647_add_needed_tables extends Migration
      */
     public function up()
     {
-        $user_group_table_name = Yii::$app->db->tablePrefix . 'message_user_group';
+        $userGroupTableName = Yii::$app->db->tablePrefix . 'message_user_group';
 
-        $user_group_x_user_table_name = Yii::$app->db->tablePrefix . 'message_user_group_x_user';
+        $userGroupXUserTableName = Yii::$app->db->tablePrefix . 'message_user_group_x_user';
 
-        $message_table_name = Yii::$app->db->tablePrefix . 'message';
+        $messageTableName = Yii::$app->db->tablePrefix . 'message';
 
-        $inbox_message_table_name = Yii::$app->db->tablePrefix . 'inbox_message';
+        $inboxMessageTableName = Yii::$app->db->tablePrefix . 'inbox_message';
 
-        $user_table_name = Yii::$app->db->tablePrefix . 'user';
+        $userTableName = Yii::$app->db->tablePrefix . 'user';
 
         $this->execute(<<<SQL
-CREATE TABLE IF NOT EXISTS `{$user_group_table_name}` (
+CREATE TABLE IF NOT EXISTS `{$userGroupTableName}` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `owner_id` INT(11) NOT NULL,
   `name` VARCHAR(80) NOT NULL,
@@ -35,11 +35,11 @@ CREATE TABLE IF NOT EXISTS `{$user_group_table_name}` (
   UNIQUE INDEX `idx_user_id_name` (`owner_id` ASC, `name` ASC),
   CONSTRAINT `fk_user_group_user1`
     FOREIGN KEY (`owner_id`)
-    REFERENCES `{$user_table_name}` (`id`)
+    REFERENCES `{$userTableName}` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE IF NOT EXISTS `{$user_group_x_user_table_name}` (
+CREATE TABLE IF NOT EXISTS `{$userGroupXUserTableName}` (
   `message_user_group_id` INT(11) NOT NULL,
   `receiver_id` INT(11) NOT NULL,
   `created_at` DATETIME NULL,
@@ -49,16 +49,16 @@ CREATE TABLE IF NOT EXISTS `{$user_group_x_user_table_name}` (
   INDEX `fk_user_group_x_user_user_group_idx` (`message_user_group_id` ASC),
   CONSTRAINT `fk_user_group_x_user_user_group`
     FOREIGN KEY (`message_user_group_id`)
-    REFERENCES `{$user_group_table_name}` (`id`)
+    REFERENCES `{$userGroupTableName}` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_user_group_x_user_user1`
     FOREIGN KEY (`receiver_id`)
-    REFERENCES `{$user_table_name}` (`id`)
+    REFERENCES `{$userTableName}` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE);
 
-CREATE TABLE IF NOT EXISTS `{$message_table_name}` (
+CREATE TABLE IF NOT EXISTS `{$messageTableName}` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `author_id` INT(11) NOT NULL,
   `subject` VARCHAR(128) NOT NULL,
@@ -70,11 +70,11 @@ CREATE TABLE IF NOT EXISTS `{$message_table_name}` (
   INDEX `fk_message_user1_idx` (`author_id` ASC),
   CONSTRAINT `fk_message_user1`
     FOREIGN KEY (`author_id`)
-    REFERENCES `{$user_table_name}` (`id`)
+    REFERENCES `{$userTableName}` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE IF NOT EXISTS `{$inbox_message_table_name}` (
+CREATE TABLE IF NOT EXISTS `{$inboxMessageTableName}` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `message_id` INT(11) NOT NULL,
   `receiver_id` INT(11) NOT NULL,
@@ -86,12 +86,12 @@ CREATE TABLE IF NOT EXISTS `{$inbox_message_table_name}` (
   INDEX `fk_inbox_user1_idx` (`receiver_id` ASC),
   CONSTRAINT `fk_inbox_message1`
     FOREIGN KEY (`message_id`)
-    REFERENCES `{$message_table_name}` (`id`)
+    REFERENCES `{$messageTableName}` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_inbox_user1`
     FOREIGN KEY (`receiver_id`)
-    REFERENCES `{$user_table_name}` (`id`)
+    REFERENCES `{$userTableName}` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 SQL

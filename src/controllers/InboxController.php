@@ -15,6 +15,7 @@ use yii\base\Action;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
@@ -86,24 +87,24 @@ class InboxController extends Controller
     }
 
     /**
-     * @param $inbox_message_id
+     * @param $inboxMessageId
      *
      * @return \yii\web\Response
      * @throws NotFoundHttpException
      * @throws \yii\base\InvalidConfigException
      */
-    public function actionMarkInboxMessage($inbox_message_id)
+    public function actionMarkInboxMessage($inboxMessageId)
     {
-        /** @var InboxMessage|null $inbox_message_model */
-        $inbox_message_model = InboxMessage::find()->own()->andWhere(['id' => $inbox_message_id])->one();
+        /** @var InboxMessage|null $inboxMessageModel */
+        $inboxMessageModel = InboxMessage::find()->own()->andWhere(['id' => $inboxMessageId])->one();
 
-        if ($inbox_message_model === null) {
+        if ($inboxMessageModel === null) {
             throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
         }
 
-        $inbox_message_model->marked = !(int)$inbox_message_model->marked;
+        $inboxMessageModel->marked = !(int)$inboxMessageModel->marked;
 
-        if (!$inbox_message_model->save()) {
+        if (!$inboxMessageModel->save()) {
             Yii::$app->session->addFlash('info',
                 Yii::t('notification', 'Cannot update read status of this message.'));
         }
@@ -118,17 +119,14 @@ class InboxController extends Controller
      */
     public function actionIndex()
     {
-        $inbox_message_search_model = new InboxMessageSearch();
-
-        $unread_inbox_message_data_provider = $inbox_message_search_model->inboxSearch(Yii::$app->request->queryParams,
-            false);
-        $everything_else_inbox_message_data_provider = $inbox_message_search_model->inboxSearch(Yii::$app->request->queryParams,
-            true);
+        $inboxMessageSearchModel = new InboxMessageSearch();
 
         return $this->render('inbox', [
-            'unread_inbox_message_data_provider' => $unread_inbox_message_data_provider,
-            'everything_else_inbox_message_data_provider' => $everything_else_inbox_message_data_provider,
-            'inbox_message_search_model' => $inbox_message_search_model
+            'unreadInboxMessageDataProvider' => $inboxMessageSearchModel->inboxSearch(Yii::$app->request->queryParams,
+                false),
+            'everythingElseInboxMessageDataProvider' => $inboxMessageSearchModel->inboxSearch(Yii::$app->request->queryParams,
+                true),
+            'inboxMessageSearchModel' => $inboxMessageSearchModel
         ]);
     }
 
@@ -138,13 +136,11 @@ class InboxController extends Controller
      */
     public function actionSent()
     {
-        $inbox_message_search_model = new InboxMessageSearch();
-
-        $send_inbox_message_data_provider = $inbox_message_search_model->sentSearch(Yii::$app->request->queryParams);
+        $inboxMessageSearchModel = new InboxMessageSearch();
 
         return $this->render('sent', [
-            'send_inbox_message_data_provider' => $send_inbox_message_data_provider,
-            'inbox_message_search_model' => $inbox_message_search_model
+            'sendInboxMessageDataProvider' => $inboxMessageSearchModel->sentSearch(Yii::$app->request->queryParams),
+            'inboxMessageSearchModel' => $inboxMessageSearchModel
         ]);
     }
 
@@ -155,35 +151,34 @@ class InboxController extends Controller
      */
     public function actionUserGroup()
     {
-        $message_user_group_search_model = new MessageUserGroupSearch();
-        $message_user_group_data_provider = $message_user_group_search_model->search(Yii::$app->request->queryParams);
+        $messageUserGroupSearchModel = new MessageUserGroupSearch();
 
         return $this->render('user-group', [
-            'message_user_group_search_model' => $message_user_group_search_model,
-            'message_user_group_data_provider' => $message_user_group_data_provider,
+            'messageUserGroupSearchModel' => $messageUserGroupSearchModel,
+            'messageUserGroupDataProvider' => $messageUserGroupSearchModel->search(Yii::$app->request->queryParams),
         ]);
     }
 
     /**
-     * @param $inbox_message_id
+     * @param $inboxMessageId
      *
      * @return string
      * @throws \yii\base\InvalidConfigException
      * @throws NotFoundHttpException
      */
-    public function actionRead($inbox_message_id)
+    public function actionRead($inboxMessageId)
     {
-        /** @var InboxMessage|null $inbox_message_model */
-        $inbox_message_model = InboxMessage::find()->own()->andWhere(['id' => $inbox_message_id])->one();
+        /** @var InboxMessage|null $inboxMessageModel */
+        $inboxMessageModel = InboxMessage::find()->own()->andWhere(['id' => $inboxMessageId])->one();
 
-        if ($inbox_message_model === null) {
+        if ($inboxMessageModel === null) {
             throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
         }
 
 
-        if ($inbox_message_model->read === 0) {
-            $inbox_message_model->read = 1;
-            if (!$inbox_message_model->save()) {
+        if ($inboxMessageModel->read === 0) {
+            $inboxMessageModel->read = 1;
+            if (!$inboxMessageModel->save()) {
                 Yii::$app->session->addFlash('info',
                     Yii::t('notification', 'Cannot update read status of this message.'));
             }
@@ -191,33 +186,33 @@ class InboxController extends Controller
 
 
         return $this->render('read', [
-            'inbox_message_model' => $inbox_message_model
+            'inboxMessageModel' => $inboxMessageModel
         ]);
     }
 
     /**
-     * @param $message_id
+     * @param $messageId
      *
      * @return string
      * @throws \yii\base\InvalidConfigException
      * @throws NotFoundHttpException
      */
-    public function actionReadSent($message_id)
+    public function actionReadSent($messageId)
     {
-        /** @var InboxMessage|null $inbox_message_model */
-        $message_model = Message::find()->own()->andWhere(['id' => $message_id])->one();
+        /** @var InboxMessage|null $inboxMessageModel */
+        $messageModel = Message::find()->own()->andWhere(['id' => $messageId])->one();
 
-        if ($message_model === null) {
+        if ($messageModel === null) {
             throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
         }
 
         return $this->render('read-sent', [
-            'message_model' => $message_model
+            'messageModel' => $messageModel
         ]);
     }
 
     /**
-     * @param $inbox_message_id
+     * @param $inboxMessageId
      *
      * @return \yii\web\Response
      * @throws NotFoundHttpException
@@ -225,22 +220,22 @@ class InboxController extends Controller
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\StaleObjectException
      */
-    public function actionDeleteInboxMessage($inbox_message_id)
+    public function actionDeleteInboxMessage($inboxMessageId)
     {
-        $inbox_message_model = InboxMessage::find()->own()->andWhere(['id' => $inbox_message_id])->one();
+        $inboxMessageModel = InboxMessage::find()->own()->andWhere(['id' => $inboxMessageId])->one();
 
-        if ($inbox_message_model === null) {
+        if ($inboxMessageModel === null) {
             throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
         }
 
-        if ($inbox_message_model->delete() !== false) {
+        if ($inboxMessageModel->delete() !== false) {
             Yii::$app->session->addFlash('info', Yii::t('notification', 'Message has been removed.'));
         }
         return $this->redirect(['index']);
     }
 
     /**
-     * @param $message_user_group_id
+     * @param $messageUserGroupId
      *
      * @return \yii\web\Response
      * @throws NotFoundHttpException
@@ -248,89 +243,89 @@ class InboxController extends Controller
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\StaleObjectException
      */
-    public function actionDeleteUserGroup($message_user_group_id)
+    public function actionDeleteUserGroup($messageUserGroupId)
     {
-        $message_user_group_model = MessageUserGroup::find()->own()->andWhere(['id' => $message_user_group_id])->one();
+        $messageUserGroupModel = MessageUserGroup::find()->own()->andWhere(['id' => $messageUserGroupId])->one();
 
-        if ($message_user_group_model === null) {
+        if ($messageUserGroupModel === null) {
             throw new NotFoundHttpException(Yii::t('notification', 'User group not found.'));
         }
 
-        if ($message_user_group_model->delete() !== false) {
+        if ($messageUserGroupModel->delete() !== false) {
             Yii::$app->session->addFlash('info', Yii::t('notification', 'User group has been removed.'));
         }
         return $this->redirect(['user-group']);
     }
 
     /**
-     * @param null $message_id
-     * @param null $reply_to
+     * @param null $messageId
+     * @param null $replyTo
      *
      * @return string
      */
-    public function actionCompose($message_id = null, $reply_to = null)
+    public function actionCompose($messageId = null, $replyTo = null)
     {
-        $message_model = new Message();
-        $message_model->author_id = Yii::$app->user->id;
+        $messageModel = new Message();
+        $messageModel->author_id = Yii::$app->user->id;
 
-        if ($message_model->load(Yii::$app->request->post())) {
-            if ($message_model->validate() && $message_model->save()) {
+        if ($messageModel->load(Yii::$app->request->post())) {
+            if ($messageModel->validate() && $messageModel->save()) {
                 Yii::$app->session->addFlash('success', Yii::t('notification', 'Message send successfully.'));
                 return $this->redirect(['index']);
             }
 
-            Yii::error($message_model->errors, Message::class);
+            Yii::error($messageModel->errors, Message::class);
         }
 
-        if ($message_id !== null) {
-            $reply_message_model = Message::findOne($message_id);
+        if ($messageId !== null) {
+            $replyMessageModel = Message::findOne($messageId);
 
-            if ($reply_message_model !== null) {
-                $message_model->subject = (!empty($reply_to) ? 'Re' : 'Fwd') . ': ' . $reply_message_model->subject;
-                $message_model->text = '<br>' . Html::tag('blockquote', $reply_message_model->text);
-                if (!empty($reply_to)) {
-                    $message_model->receiver_ids[] = $reply_to;
+            if ($replyMessageModel !== null) {
+                $messageModel->subject = (!empty($replyTo) ? 'Re' : 'Fwd') . ': ' . $replyMessageModel->subject;
+                $messageModel->text = '<br>' . Html::tag('blockquote', $replyMessageModel->text);
+                if (!empty($replyTo)) {
+                    $messageModel->receiverIds[] = $replyTo;
                 }
             }
         }
 
         return $this->render('compose', [
-            'message_model' => $message_model
+            'messageModel' => $messageModel
         ]);
     }
 
     /**
-     * @param null|string $message_user_group_id
+     * @param null|string $messageUserGroupId
      *
      * @return string
      * @throws \yii\base\InvalidConfigException
      * @throws NotFoundHttpException
      */
-    public function actionUserGroupEdit($message_user_group_id = null)
+    public function actionUserGroupEdit($messageUserGroupId = null)
     {
-        if ($message_user_group_id === null) {
-            $message_user_group_model = new MessageUserGroup();
+        if ($messageUserGroupId === null) {
+            $messageUserGroupModel = new MessageUserGroup();
         } else {
-            $message_user_group_model = MessageUserGroup::find()->andWhere(['id' => $message_user_group_id])->own()->one();
+            $messageUserGroupModel = MessageUserGroup::find()->andWhere(['id' => $messageUserGroupId])->own()->one();
 
-            if ($message_user_group_model === null) {
+            if ($messageUserGroupModel === null) {
                 throw new NotFoundHttpException(Yii::t('notification', 'User group does not exist.'));
             }
         }
 
-        $message_user_group_model->owner_id = Yii::$app->user->id;
+        $messageUserGroupModel->owner_id = Yii::$app->user->id;
 
-        if ($message_user_group_model->load(Yii::$app->request->post())) {
-            if ($message_user_group_model->validate() && $message_user_group_model->save()) {
+        if ($messageUserGroupModel->load(Yii::$app->request->post())) {
+            if ($messageUserGroupModel->validate() && $messageUserGroupModel->save()) {
                 Yii::$app->session->addFlash('success', Yii::t('notification', 'User group saved successfully.'));
                 return $this->redirect(['user-group']);
             }
 
-            Yii::error($message_user_group_model->errors, MessageUserGroup::class);
+            Yii::error($messageUserGroupModel->errors, MessageUserGroup::class);
         }
 
         return $this->render('user-group-edit', [
-            'message_user_group_model' => $message_user_group_model
+            'messageUserGroupModel' => $messageUserGroupModel
         ]);
     }
 }

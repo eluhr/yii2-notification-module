@@ -1,9 +1,8 @@
 <?php
-
 /**
  * --- VARIABLES ---
  *
- * @var InboxMessageSearch $inbox_message_search_model
+ * @var InboxMessageSearch $inboxMessageSearchModel
  * @var string $title
  */
 
@@ -20,12 +19,12 @@ use yii\widgets\ActiveForm;
         ?>
         <div class="btn-group btn-group-sm pull-left">
             <div class="btn">
-                <?=$form->field($inbox_message_search_model,'sort')->checkbox(['class' => 'hidden'], false)->label(FA::icon(empty($inbox_message_search_model->sort) || $inbox_message_search_model->sort === '0' ? FA::_SORT_NUMERIC_ASC : FA::_SORT_NUMERIC_DESC))?>
+                <?=$form->field($inboxMessageSearchModel,'sort')->checkbox(['class' => 'hidden'], false)->label(FA::icon(empty($inboxMessageSearchModel->sort) || $inboxMessageSearchModel->sort === '0' ? FA::_SORT_NUMERIC_ASC : FA::_SORT_NUMERIC_DESC))?>
             </div>
         </div>
         <div class="input-group input-group-sm pull-right">
             <div class="has-feedback">
-                <?= $form->field($inbox_message_search_model, 'q',['options' => ['class' => '']])->input('text', [
+                <?= $form->field($inboxMessageSearchModel, 'q',['options' => ['class' => '']])->input('text', [
                     'placeholder' => Yii::t('notification', 'Search messages'),
                     'class' => 'form-control input-sm'
                 ])->label(false)->error(false) ?>

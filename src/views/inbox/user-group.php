@@ -1,14 +1,13 @@
 <?php
-
 /**
  * --- VARIABLES ---
  *
- * @var MessageUserGroup $message_user_group_search_model
- * @var ActiveDataProvider $message_user_group_data_provider
+ * @var MessageUserGroup $messageUserGroupSearchModel
+ * @var ActiveDataProvider $messageUserGroupDataProvider
+ * @var View $this
  */
 
 use eluhr\notification\components\helpers\Inbox;
-use eluhr\notification\models\search\InboxMessage as InboxMessageSearch;
 use eluhr\notification\models\search\MessageUserGroup;
 use rmrevin\yii\fontawesome\FA;
 use yii\data\ActiveDataProvider;
@@ -17,13 +16,6 @@ use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
-/**
- * --- VARIABLES ---
- *
- * @var ActiveDataProvider $message_user_group_data_provider
- * @var InboxMessageSearch $message_user_group_search_model
- * @var View $this
- */
 $this->beginContent(__DIR__ . '/notification-layout.php');
 ?>
 
@@ -36,7 +28,7 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
             $form = ActiveForm::begin(['method' => 'get', 'action' => ['']]);
             ?>
             <div class="has-feedback">
-                <?= $form->field($message_user_group_search_model, 'q',
+                <?= $form->field($messageUserGroupSearchModel, 'q',
                     ['options' => ['class' => 'hh']])->input('text', [
                     'placeholder' => Yii::t('notification', 'Search user groups'),
                     'class' => 'form-control input-sm'
@@ -53,9 +45,10 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
 
 
 <div class="box-body">
-    <?= GridView::widget(Inbox::userGroupGridViewConfig($message_user_group_data_provider,
-        $message_user_group_search_model)) ?>
-    <?= Html::a(Yii::t('notification','Add new user group'),['user-group-edit'],['class' => 'btn btn-primary btn-block']) ?>
+    <?= GridView::widget(Inbox::userGroupGridViewConfig($messageUserGroupDataProvider,
+        $messageUserGroupSearchModel)) ?>
+    <?= Html::a(Yii::t('notification', 'Add new user group'), ['user-group-edit'],
+        ['class' => 'btn btn-primary btn-block']) ?>
 </div>
 
 <?php

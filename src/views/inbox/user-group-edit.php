@@ -1,4 +1,10 @@
 <?php
+/**
+ * --- VARIABLES ---
+ *
+ * @var MessageUserGroup $messageUserGroupModel
+ * @var View $this
+ */
 
 use eluhr\notification\components\helpers\User as UserHelper;
 use eluhr\notification\models\MessageUserGroup;
@@ -8,22 +14,17 @@ use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
-/**
- * --- VARIABLES ---
- *
- * @var MessageUserGroup $message_user_group_model
- * @var View $this
- */
+
 $this->beginContent(__DIR__ . '/notification-layout.php');
 ?>
 
-<?php if (!$message_user_group_model->isNewRecord): ?>
+<?php if (!$messageUserGroupModel->isNewRecord): ?>
     <div class="box-header">
-        <div class="box-title pull-left"><?= $message_user_group_model->name ?></div>
+        <div class="box-title pull-left"><?= $messageUserGroupModel->name ?></div>
         <div class="btn-group pull-right">
             <?= Html::a(FA::icon(FA::_TRASH_O), [
                 'delete-user-group',
-                'message_user_group_id' => $message_user_group_model->id,
+                'messageUserGroupId' => $messageUserGroupModel->id,
             ], [
                 'class' => 'btn btn-danger btn-sm',
                 'data-method' => 'post',
@@ -38,14 +39,14 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
 
         $form = ActiveForm::begin();
 
-        echo $form->field($message_user_group_model, 'owner_id')->hiddenInput()->label(false);
+        echo $form->field($messageUserGroupModel, 'owner_id')->hiddenInput()->label(false);
 
-        echo $form->field($message_user_group_model, 'name')->textInput([
+        echo $form->field($messageUserGroupModel, 'name')->textInput([
             'placeholder' => Yii::t('notification', 'Name:')
         ])->label(false);
 
 
-        echo $form->field($message_user_group_model, 'receiver_ids')->widget(Select2::class, [
+        echo $form->field($messageUserGroupModel, 'receiverIds')->widget(Select2::class, [
             'theme' => Select2::THEME_BOOTSTRAP,
             'data' => UserHelper::possibleUsers(),
             'options' => [
@@ -54,7 +55,7 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
             ]
         ])->label(false);
 
-        echo Html::errorSummary($message_user_group_model);
+        echo Html::errorSummary($messageUserGroupModel);
 
         echo Html::submitButton(Yii::t('notification', 'Save'), ['class' => 'btn btn-primary']);
 

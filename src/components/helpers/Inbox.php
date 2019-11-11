@@ -24,29 +24,29 @@ use yii\widgets\LinkPager;
 class Inbox
 {
     /**
-     * @param ActiveDataProvider $data_provider
-     * @param InboxMessageSearch $search_model
+     * @param ActiveDataProvider $dataProvider
+     * @param InboxMessageSearch $searchModel
      *
      * @return array
      */
-    public static function inboxGridViewConfig($data_provider, $search_model)
+    public static function inboxGridViewConfig($dataProvider, $searchModel)
     {
         return [
-            'dataProvider' => $data_provider,
+            'dataProvider' => $dataProvider,
             'pager' => [
                 'class' => LinkPager::class,
                 'maxButtonCount' => 5,
                 'firstPageLabel' => FA::icon(FA::_CHEVRON_LEFT),
                 'lastPageLabel' => FA::icon(FA::_CHEVRON_RIGHT),
             ],
-            'filterModel' => $search_model,
+            'filterModel' => $searchModel,
             'layout' => "<div class=\"box-body no-padding\">{items}</div><div class=\"box-footer\">{summary}\n{pager}</div>",
             'tableOptions' => [
                 'class' => 'table table-hover'
             ],
             'rowOptions' => function (InboxMessage $model) {
                 return [
-                    'onclick' => 'window.location.href="' . Url::to(['read', 'inbox_message_id' => $model->id]) . '";'
+                    'onclick' => 'window.location.href="' . Url::to(['read', 'inboxMessageId' => $model->id]) . '";'
                 ];
             },
             'showHeader' => false,
@@ -59,7 +59,7 @@ class Inbox
                 [
                     'value' => function (InboxMessage $model) {
                         return Html::a(FA::icon((int)$model->marked === 0 ? FA::_FLAG_O : FA::_FLAG,
-                            ['class' => 'text-warning']), ['mark-inbox-message', 'inbox_message_id' => $model->id],
+                            ['class' => 'text-warning']), ['mark-inbox-message', 'inboxMessageId' => $model->id],
                             ['data-method' => 'post', 'class' => 'no-border']);
                     },
                     'format' => 'raw'
@@ -97,12 +97,12 @@ class Inbox
                                 'items' => [
                                     [
                                         'label' => Yii::t('notification', 'Read'),
-                                        'url' => ['read','inbox_message_id' => $model->id]
+                                        'url' => ['read','inboxMessageId' => $model->id]
                                     ],
                                     [
                                         'label' => (int)$model->marked === 0 ? Yii::t('notification',
                                             'Mark') : Yii::t('notification', 'Unmark'),
-                                        'url' => ['mark-inbox-message', 'inbox_message_id' => $model->id],
+                                        'url' => ['mark-inbox-message', 'inboxMessageId' => $model->id],
                                         'linkOptions' => [
                                             'data-method' => 'post',
                                             'class' => 'text-danger no-border',
@@ -112,7 +112,7 @@ class Inbox
                                         'label' => Yii::t('notification', 'Delete'),
                                         'url' => [
                                             'delete-inbox-message',
-                                            'inbox_message_id' => $model->id,
+                                            'inboxMessageId' => $model->id,
                                         ],
                                         'linkOptions' => [
                                             'class' => 'text-danger no-border',
@@ -130,22 +130,22 @@ class Inbox
     }
 
     /**
-     * @param ActiveDataProvider $data_provider
-     * @param InboxMessageSearch $search_model
+     * @param ActiveDataProvider $dataProvider
+     * @param InboxMessageSearch $searchModel
      *
      * @return array
      */
-    public static function userGroupGridViewConfig($data_provider, $search_model)
+    public static function userGroupGridViewConfig($dataProvider, $searchModel)
     {
         return [
-            'dataProvider' => $data_provider,
+            'dataProvider' => $dataProvider,
             'pager' => [
                 'class' => LinkPager::class,
                 'maxButtonCount' => 5,
                 'firstPageLabel' => FA::icon(FA::_CHEVRON_LEFT),
                 'lastPageLabel' => FA::icon(FA::_CHEVRON_RIGHT),
             ],
-            'filterModel' => $search_model,
+            'filterModel' => $searchModel,
             'layout' => "<div class=\"box-body no-padding\">{items}</div><div class=\"box-footer\">{summary}\n{pager}</div>",
             'tableOptions' => [
                 'class' => 'table table-hover'
@@ -154,7 +154,7 @@ class Inbox
                 return [
                     'onclick' => 'window.location.href="' . Url::to([
                             'user-group-edit',
-                            'message_user_group_id' => $model->id
+                            'messageUserGroupId' => $model->id
                         ]) . '";'
                 ];
             },
@@ -169,11 +169,11 @@ class Inbox
                 [
                     'value' => function (MessageUserGroup $model) {
 
-                        $receivers_count = count($model->receivers);
-                        if (!empty($model->receivers) && $receivers_count > 1) {
-                            $label = $model->receivers[0]->username . ' +' . ($receivers_count - 1);
+                        $receiversCount = count($model->receivers);
+                        if (!empty($model->receivers) && $receiversCount > 1) {
+                            $label = $model->receivers[0]->username . ' +' . ($receiversCount - 1);
                         } else {
-                            if ($receivers_count === 0) {
+                            if ($receiversCount === 0) {
                                 $label = 0;
                             } else {
                                 $label = $model->receivers[0]->username;
@@ -195,13 +195,13 @@ class Inbox
                                 'items' => [
                                     [
                                         'label' => Yii::t('notification', 'Edit'),
-                                        'url' => ['user-group-edit','message_user_group_id' => $model->id]
+                                        'url' => ['user-group-edit','messageUserGroupId' => $model->id]
                                     ],
                                     [
                                         'label' => Yii::t('notification', 'Delete'),
                                         'url' => [
                                             'delete-user-group',
-                                            'message_user_group_id' => $model->id,
+                                            'messageUserGroupId' => $model->id,
                                         ],
                                         'linkOptions' => [
                                             'class' => 'text-danger no-border',
@@ -219,29 +219,29 @@ class Inbox
     }
 
     /**
-     * @param ActiveDataProvider $data_provider
-     * @param InboxMessageSearch $search_model
+     * @param ActiveDataProvider $dataProvider
+     * @param InboxMessageSearch $searchModel
      *
      * @return array
      */
-    public static function sentGridViewConfig($data_provider, $search_model)
+    public static function sentGridViewConfig($dataProvider, $searchModel)
     {
         return [
-            'dataProvider' => $data_provider,
+            'dataProvider' => $dataProvider,
             'pager' => [
                 'class' => LinkPager::class,
                 'maxButtonCount' => 5,
                 'firstPageLabel' => FA::icon(FA::_CHEVRON_LEFT),
                 'lastPageLabel' => FA::icon(FA::_CHEVRON_RIGHT),
             ],
-            'filterModel' => $search_model,
+            'filterModel' => $searchModel,
             'layout' => "<div class=\"box-body no-padding\">{items}</div><div class=\"box-footer\">{summary}\n{pager}</div>",
             'tableOptions' => [
                 'class' => 'table table-hover'
             ],
             'rowOptions' => function (Message $model) {
                 return [
-                    'onclick' => 'window.location.href="' . Url::to(['read-sent', 'message_id' => $model->id]) . '";'
+                    'onclick' => 'window.location.href="' . Url::to(['read-sent', 'messageId' => $model->id]) . '";'
                 ];
             },
             'showHeader' => false,
@@ -276,7 +276,7 @@ class Inbox
                                 'items' => [
                                     [
                                         'label' => Yii::t('notification', 'Read'),
-                                        'url' => ['read-sent','message_id' => $model->id]
+                                        'url' => ['read-sent','messageId' => $model->id]
                                     ]
                                 ]
                             ]

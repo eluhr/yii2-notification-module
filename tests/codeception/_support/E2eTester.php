@@ -40,12 +40,12 @@ class E2eTester extends \Codeception\Actor
     /**
      * Credit: https://stackoverflow.com/questions/29168107/how-to-fill-a-rich-text-editor-field-for-a-codeception-acceptance-test#answer-33480861
      *
-     * @param $element_id
+     * @param $elementId
      * @param $content
      */
-    public function fillCkEditorById($element_id, $content)
+    public function fillCkEditorById($elementId, $content)
     {
-        $selector = \Facebook\WebDriver\WebDriverBy::cssSelector('#cke_' . $element_id . ' .cke_wysiwyg_frame');
+        $selector = \Facebook\WebDriver\WebDriverBy::cssSelector('#cke_' . $elementId . ' .cke_wysiwyg_frame');
         $this->executeInSelenium(
             function (\Facebook\WebDriver\Remote\RemoteWebDriver $web_driver)
             use ($selector, $content) {

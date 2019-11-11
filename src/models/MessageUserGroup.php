@@ -21,22 +21,22 @@ use yii\helpers\ArrayHelper;
  * @property string $name
  * @property string $uniqueId
  * @property User[] $receivers
- * @property User[] $_receiver_ids
- * @property array $receiver_ids
+ * @property User[] $_receiverIds
+ * @property array $receiverIds
  */
 class MessageUserGroup extends ActiveRecord
 {
 
     const MESSAGE_USER_GROUP_ID_PREFIX = 'mug-';
 
-    private $_receiver_ids;
+    private $_receiverIds;
 
     /**
-     * @param $receiver_ids
+     * @param $receiverIds
      */
-    public function setReceiver_ids($receiver_ids)
+    public function setReceiverIds($receiverIds)
     {
-        $this->_receiver_ids = $receiver_ids;
+        $this->_receiverIds = $receiverIds;
     }
 
     /**
@@ -44,31 +44,31 @@ class MessageUserGroup extends ActiveRecord
      *
      * @return array
      */
-    public function getReceiver_ids()
+    public function getReceiverIds()
     {
-        if (empty($this->_receiver_ids)) {
+        if (empty($this->_receiverIds)) {
             return ArrayHelper::map($this->receivers,'id','id');
         }
-        return $this->_receiver_ids;
+        return $this->_receiverIds;
     }
 
 
     /**
-     * @param $unique_id
+     * @param $uniqueId
      *
      * @return bool|array
      */
-    public static function receiverIdsByUniqueId($unique_id)
+    public static function receiverIdsByUniqueId($uniqueId)
     {
-        if (strpos($unique_id, static::MESSAGE_USER_GROUP_ID_PREFIX) !== false) {
-            $message_user_group_id = substr($unique_id, strlen(static::MESSAGE_USER_GROUP_ID_PREFIX));
+        if (strpos($uniqueId, static::MESSAGE_USER_GROUP_ID_PREFIX) !== false) {
+            $messageUserGroupId = substr($uniqueId, strlen(static::MESSAGE_USER_GROUP_ID_PREFIX));
 
-            $message_user_group = static::findOne($message_user_group_id);
-            if ($message_user_group !== null) {
-                return ArrayHelper::map($message_user_group->receivers, 'id', 'id');
+            $messageUserGroup = static::findOne($messageUserGroupId);
+            if ($messageUserGroup !== null) {
+                return ArrayHelper::map($messageUserGroup->receivers, 'id', 'id');
             }
 
-            if ($message_user_group_id === '0' && Yii::$app->user->can(Permission::SEND_MESSAGE_TO_EVERYONE)) {
+            if ($messageUserGroupId === '0' && Yii::$app->user->can(Permission::SEND_MESSAGE_TO_EVERYONE)) {
                 return ArrayHelper::map(User::find()->all(), 'id', 'id');
             }
         }
@@ -90,17 +90,17 @@ class MessageUserGroup extends ActiveRecord
 
         MessageUserGroupXUser::deleteAll(['message_user_group_id' => $this->id]);
 
-        foreach ($this->receiver_ids as $receiver_id) {
-            $message_user_group_x_user_model = new MessageUserGroupXUser([
+        foreach ($this->receiverIds as $receiverId) {
+            $messageUserGroupXUserModel = new MessageUserGroupXUser([
                 'message_user_group_id' => $this->id,
-                'receiver_id' => $receiver_id
+                'receiver_id' => $receiverId
             ]);
 
-            if (!$message_user_group_x_user_model->save()) {
+            if (!$messageUserGroupXUserModel->save()) {
                 $transaction->rollBack();
                 $this->delete();
                 Yii::$app->session->addFlash('error', Yii::t('notification', 'Error while saving: {errors}',
-                    ['errors' => implode(' ', $message_user_group_x_user_model->getErrorSummary(true))]));
+                    ['errors' => implode(' ', $messageUserGroupXUserModel->getErrorSummary(true))]));
             }
         }
         $transaction->commit();
@@ -156,7 +156,7 @@ class MessageUserGroup extends ActiveRecord
     public function rules()
     {
         $rules = parent::rules();
-        $rules['required-rule'] = [['owner_id', 'name', 'receiver_ids'], 'required'];
+        $rules['required-rule'] = [['owner_id', 'name', 'receiverIds'], 'required'];
         $rules['owner-rule'] = [
             'owner_id',
             'exist',
@@ -175,7 +175,7 @@ class MessageUserGroup extends ActiveRecord
     public function attributeLabels()
     {
         $attributeLabels = parent::attributeLabels();
-        $attributeLabels['receiver_ids'] = Yii::t('notification','Receivers');
+        $attributeLabels['receiverIds'] = Yii::t('notification','Receivers');
         $attributeLabels['name'] = Yii::t('notification','Name');
         return $attributeLabels;
     }

@@ -1,11 +1,5 @@
 <?php
 /**
- * @link http://www.diemeisterei.de/
- * @copyright Copyright (c) 2019 diemeisterei GmbH, Stuttgart
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
  * --- VARIABLES ---
  *
  * @var InboxMessage[] $inboxMessages
@@ -46,7 +40,7 @@ use yii\helpers\Url;
                         <li>
                             <a href="<?= Url::to([
                                 '/' . $moduleId . '/inbox/read',
-                                'inbox_message_id' => $inboxMessage->id
+                                'inboxMessageId' => $inboxMessage->id
                             ]) ?>">
                                 <h4>
                                     <?= $message->author->username ?>

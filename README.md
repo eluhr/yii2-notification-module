@@ -61,7 +61,7 @@ ExampleModel extends ActiveRecord implements ModelChangeNotification {
             $behaviors = parent::behaviors();
             $behaviors['notification'] = [
                 'class' => ModelChangeNotification::class,
-                'receiver_ids' => [MessageUserGroup::MESSAGE_USER_GROUP_ID_PREFIX . '1']
+                'receiverIds' => [MessageUserGroup::MESSAGE_USER_GROUP_ID_PREFIX . '1']
             ];
             return $behaviors;
         }
@@ -72,10 +72,7 @@ ExampleModel extends ActiveRecord implements ModelChangeNotification {
          */
         public function subject()
         {
-            if ($this->isNewRecord) {
-                return 'New entry';
-            }
-            return 'Updated entry #' . $this->id;
+            return $this->isNewRecord ? 'New entry' : ('Updated entry #' . $this->id);
         }
     
         /**
@@ -84,8 +81,7 @@ ExampleModel extends ActiveRecord implements ModelChangeNotification {
         public function text()
         {
             $text = Html::tag('pre', htmlentities(json_encode($this->attributes, JSON_PRETTY_PRINT)));
-            $text .= Html::tag('p', Html::a('Direct link',['/widgets/crud/widget-template/view','id' => $this->id]));
-    
+            $text .= Html::tag('p', Html::a('Direct link',['/widgets/crud/widget-template/view','id' => $this->id], true));
             return $text;
         }
         

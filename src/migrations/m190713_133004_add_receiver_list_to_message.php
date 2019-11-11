@@ -15,10 +15,10 @@ class m190713_133004_add_receiver_list_to_message extends Migration
     {
         $this->addColumn('{{%message}}','all_receiver_ids','VARCHAR(255) NULL AFTER send_at');
         // migrate old data
-        $message_table_name = Yii::$app->db->tablePrefix . 'message';
-        $inbox_message_table_name = Yii::$app->db->tablePrefix . 'inbox_message';
+        $messageTableName = Yii::$app->db->tablePrefix . 'message';
+        $inboxMessageTableName = Yii::$app->db->tablePrefix . 'inbox_message';
         $this->execute(<<<SQL
-UPDATE {$message_table_name} AS m SET m.all_receiver_ids = (SELECT GROUP_CONCAT(DISTINCT receiver_id) FROM {$inbox_message_table_name} AS im WHERE m.id = im.message_id);
+UPDATE {$messageTableName} AS m SET m.all_receiver_ids = (SELECT GROUP_CONCAT(DISTINCT receiver_id) FROM {$inboxMessageTableName} AS im WHERE m.id = im.message_id);
 SQL
 );
     }

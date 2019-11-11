@@ -54,7 +54,7 @@ class InboxMessage extends InboxMessageModel
     {
         $query = InboxMessageModel::find();
 
-        $active_data_provider = new ActiveDataProvider([
+        $activeDataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
                 'defaultPageSize' => 10,
@@ -76,7 +76,7 @@ class InboxMessage extends InboxMessageModel
         $query->orderBy(['send_at' => empty($this->sort) || $this->sort === '0' ? SORT_DESC : SORT_ASC]);
         $query->own();
 
-        return $active_data_provider;
+        return $activeDataProvider;
     }
 
     /**
@@ -90,7 +90,7 @@ class InboxMessage extends InboxMessageModel
     {
         $query = Message::find();
 
-        $active_data_provider = new ActiveDataProvider([
+        $activeDataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
@@ -102,6 +102,6 @@ class InboxMessage extends InboxMessageModel
         $query->orderBy(['created_at' => SORT_DESC]);
         $query->own();
 
-        return $active_data_provider;
+        return $activeDataProvider;
     }
 }

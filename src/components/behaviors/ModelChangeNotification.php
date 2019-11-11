@@ -16,8 +16,8 @@ use yii\db\ActiveRecord;
  *
  * --- PROPERTIES ---
  *
- * @property int $alternative_author_id
- * @property int $receiver_ids
+ * @property int $alternativeAuthorId
+ * @property int $receiverIds
  *
  * @property \eluhr\notification\components\interfaces\ModelChangeNotification $owner
  */
@@ -29,8 +29,8 @@ class ModelChangeNotification extends Behavior
     /**
      * If set, this value will be used as the message's author id
      */
-    public $alternative_author_id;
-    public $receiver_ids = [];
+    public $alternativeAuthorId;
+    public $receiverIds = [];
 
     /**
      * @return array
@@ -56,15 +56,15 @@ class ModelChangeNotification extends Behavior
      */
     protected function sendNotification()
     {
-        $message_model = new Message([
+        $messageModel = new Message([
             'subject' => $this->owner->subject(),
             'text' => $this->owner->text(),
-            'author_id' => $this->alternative_author_id ?? Yii::$app->user->id,
-            'receiver_ids' => Message::receiverIdsByPossibleRecipients($this->receiver_ids)
+            'author_id' => $this->alternativeAuthorId ?? Yii::$app->user->id,
+            'receiverIds' => Message::receiverIdsByPossibleRecipients($this->receiverIds)
         ]);
 
-        if (!$message_model->save()) {
-            Yii::error($message_model->errors, __CLASS__);
+        if (!$messageModel->save()) {
+            Yii::error($messageModel->errors, __CLASS__);
             throw new ErrorException(Yii::t('notification', 'Error while sending notification'));
         }
     }

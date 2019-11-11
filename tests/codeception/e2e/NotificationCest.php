@@ -9,14 +9,14 @@ class NotificationCest
 {
 
     /**
-     * @param string $user_identifier
+     * @param string $userIdentifier
      * @param E2eTester $I
      *
      * @throws Exception
      */
-    private function userLogin($user_identifier, $I)
+    private function userLogin($userIdentifier, $I)
     {
-        $user = Fixtures::get($user_identifier);
+        $user = Fixtures::get($userIdentifier);
         $I->login($user['username'], $user['password']);
         $I->amOnPage('/notification');
     }

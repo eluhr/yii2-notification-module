@@ -46,7 +46,7 @@ class MessageUserGroup extends MessageUserGroupModel
     {
         $query = MessageUserGroupModel::find();
 
-        $active_data_provider = new ActiveDataProvider([
+        $activeDataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
@@ -61,6 +61,6 @@ class MessageUserGroup extends MessageUserGroupModel
         $query->own();
         $query->groupBy([MessageUserGroupModel::tableName().'.id']);
 
-        return $active_data_provider;
+        return $activeDataProvider;
     }
 }
