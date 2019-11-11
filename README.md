@@ -1,10 +1,7 @@
-
-This extention requires heavily on 2amgos/usuario and almasaeed2010/adminlte
-
 ## Installation
 
 ````bash
-composer require eluhr/notification
+composer require eluhr/yii2-notification-module
 ````
 
 ## Configuration
