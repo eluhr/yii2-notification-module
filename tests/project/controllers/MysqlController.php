@@ -35,17 +35,18 @@ class MysqlController extends \dmstr\console\controllers\MysqlController
 
         try {
             // retry an operation up to 20 times
+            /** @var PDO $pdo */
             $pdo = $this->retry(
                 $this->mysqlRetryMaxCount,
                 function () use ($dsn, $user, $password) {
                     $this->stdout('.');
                     sleep($this->mysqlRetryTimeout);
-                    return new \PDO($dsn, $user, $password);
+                    return new PDO($dsn, $user, $password);
                 }
             );
         } catch (FailingTooHardException $e) {
             $this->stderr("\n\nError: Unable to connect to database '".$e->getMessage()."''");
-            \Yii::$app->end(1);
+            Yii::$app->end(1);
         }
         $this->stdout(' [OK]'.PHP_EOL);
 
@@ -63,7 +64,7 @@ class MysqlController extends \dmstr\console\controllers\MysqlController
         beginning:
         try {
             return $fn();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if (!$retries) {
                 throw new FailingTooHardException('', 0, $e);
             }

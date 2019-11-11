@@ -71,7 +71,7 @@ class E2eTester extends \Codeception\Actor
     {
         $options = implode(',', (array)$values);
         $this->executeJS(<<<JS
- $('{$selector}').select2("val", [{$options}]);
+ $('{$selector}').select2("val", [{$options}])
 JS
         );
     }

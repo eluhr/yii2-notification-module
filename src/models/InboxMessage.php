@@ -15,13 +15,9 @@ use Yii;
  *
  * @property int $id
  * @property Message $message
- * @property int $messageId
  * @property User $receiver
- * @property int $receiverId
- * @property int $marked
  * @property InboxMessage $next
  * @property InboxMessage $previous
- * @property string $read
  *
  */
 class InboxMessage extends ActiveRecord

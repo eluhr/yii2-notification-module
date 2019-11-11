@@ -3,7 +3,7 @@ function printElement(element)
 {
   var printWindow = window.open('', 'PRINT', 'height=400,width=600');
 
-  printWindow.document.write('<html><head><title>' + document.title  + '</title>');
+  printWindow.document.write('<html lang="en"><head><title>' + document.title  + '</title>');
   printWindow.document.write('</head><body >');
   printWindow.document.write(document.getElementById(element).innerHTML);
   printWindow.document.write('</body></html>');

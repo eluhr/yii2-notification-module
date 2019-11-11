@@ -97,7 +97,7 @@ class Inbox
                                 'items' => [
                                     [
                                         'label' => Yii::t('notification', 'Read'),
-                                        'url' => ['read','inboxMessageId' => $model->id]
+                                        'url' => ['read', 'inboxMessageId' => $model->id]
                                     ],
                                     [
                                         'label' => (int)$model->marked === 0 ? Yii::t('notification',
@@ -131,7 +131,7 @@ class Inbox
 
     /**
      * @param ActiveDataProvider $dataProvider
-     * @param InboxMessageSearch $searchModel
+     * @param InboxMessageSearch|\eluhr\notification\models\search\MessageUserGroup $searchModel
      *
      * @return array
      */
@@ -173,11 +173,7 @@ class Inbox
                         if (!empty($model->receivers) && $receiversCount > 1) {
                             $label = $model->receivers[0]->username . ' +' . ($receiversCount - 1);
                         } else {
-                            if ($receiversCount === 0) {
-                                $label = 0;
-                            } else {
-                                $label = $model->receivers[0]->username;
-                            }
+                            $label = $receiversCount === 0 ? 0 : $model->receivers[0]->username;
                         }
                         return Html::tag('span', $label, ['class' => 'label label-primary']);
                     },
@@ -195,7 +191,7 @@ class Inbox
                                 'items' => [
                                     [
                                         'label' => Yii::t('notification', 'Edit'),
-                                        'url' => ['user-group-edit','messageUserGroupId' => $model->id]
+                                        'url' => ['user-group-edit', 'messageUserGroupId' => $model->id]
                                     ],
                                     [
                                         'label' => Yii::t('notification', 'Delete'),
@@ -276,7 +272,7 @@ class Inbox
                                 'items' => [
                                     [
                                         'label' => Yii::t('notification', 'Read'),
-                                        'url' => ['read-sent','messageId' => $model->id]
+                                        'url' => ['read-sent', 'messageId' => $model->id]
                                     ]
                                 ]
                             ]
