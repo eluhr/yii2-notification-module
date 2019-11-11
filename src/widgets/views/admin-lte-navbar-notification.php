@@ -12,6 +12,7 @@ use eluhr\notification\models\InboxMessage;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\helpers\Url;
+
 ?>
 
 <li class="dropdown messages-menu">

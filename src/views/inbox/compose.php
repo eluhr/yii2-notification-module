@@ -5,6 +5,7 @@
  * @var Message $messageModel
  * @var View $this
  */
+
 use dosamigos\ckeditor\CKEditor;
 use eluhr\notification\components\helpers\Permission;
 use eluhr\notification\models\Message;
@@ -13,6 +14,7 @@ use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
+
 $this->beginContent(__DIR__ . '/notification-layout.php');
 ?>
 

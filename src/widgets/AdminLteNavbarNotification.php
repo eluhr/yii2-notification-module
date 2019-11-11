@@ -5,7 +5,6 @@ namespace eluhr\notification\widgets;
 
 use eluhr\notification\assets\NotificationAsset;
 use eluhr\notification\models\InboxMessage;
-use Yii;
 use yii\base\Widget;
 
 /**

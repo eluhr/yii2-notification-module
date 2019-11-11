@@ -7,11 +7,13 @@
  * @var InboxMessageSearch $inboxMessageSearchModel
  * @var View $this
  */
+
 use eluhr\notification\components\helpers\Inbox;
 use eluhr\notification\models\search\InboxMessage as InboxMessageSearch;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\web\View;
+
 $this->beginContent(__DIR__ . '/notification-layout.php');
 ?>
 

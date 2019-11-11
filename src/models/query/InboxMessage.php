@@ -22,6 +22,7 @@ class InboxMessage extends ActiveQuery
     {
         return $this->andWhere(['receiver_id' => Yii::$app->user->id]);
     }
+
     /**
      * @return InboxMessage
      */
@@ -29,6 +30,7 @@ class InboxMessage extends ActiveQuery
     {
         return $this->andWhere(['read' => 1]);
     }
+
     /**
      * @return InboxMessage
      */

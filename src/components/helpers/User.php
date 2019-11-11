@@ -2,8 +2,8 @@
 
 namespace eluhr\notification\components\helpers;
 
-use yii\helpers\ArrayHelper;
 use Da\User\Model\User as UserModel;
+use yii\helpers\ArrayHelper;
 
 /**
  * @package eluhr\notification\components\helpers
