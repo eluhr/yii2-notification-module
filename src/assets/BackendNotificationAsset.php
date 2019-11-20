@@ -14,8 +14,7 @@ class BackendNotificationAsset extends AssetBundle
     public $sourcePath = __DIR__ . '/web/backend';
 
     public $js = [
-        'js/filter-form.js',
-        'js/print-message.js'
+        'js/filter-form.js'
     ];
 
     public $depends = [

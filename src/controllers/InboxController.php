@@ -7,6 +7,7 @@ use eluhr\notification\assets\BackendNotificationAsset;
 use eluhr\notification\components\helpers\Permission;
 use eluhr\notification\models\InboxMessage;
 use eluhr\notification\models\Message;
+use eluhr\notification\models\MessagePreferences;
 use eluhr\notification\models\MessageUserGroup;
 use eluhr\notification\models\search\InboxMessage as InboxMessageSearch;
 use eluhr\notification\models\search\MessageUserGroup as MessageUserGroupSearch;
@@ -37,6 +38,7 @@ class InboxController extends Controller
                     'allow' => true,
                     'actions' => [
                         'index',
+                        'preferences',
                         'read',
                         'delete-inbox-message',
                         'sent',
@@ -326,5 +328,23 @@ class InboxController extends Controller
         return $this->render('user-group-edit', [
             'messageUserGroupModel' => $messageUserGroupModel
         ]);
+    }
+
+    public function actionPreferences()
+    {
+        $model = MessagePreferences::find()->own()->one();
+
+        if ($model === null) {
+            $model = new MessagePreferences([
+                'user_id' => Yii::$app->user->id,
+                'wants_to_additionally_receive_messages_by_mail' => 1
+            ]);
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->refresh();
+        }
+
+        return $this->render('preferences', ['model' => $model]);
     }
 }
