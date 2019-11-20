@@ -44,6 +44,12 @@ use yii\helpers\Url;
                     </a>
                 </li>
             <?php endif; ?>
+            <li class="<?= Yii::$app->controller->action->id === 'preferences' ? 'active' : null ?>">
+                <a href="<?= Url::to(['preferences']) ?>">
+                    <?= FA::icon(FA::_COG) ?>
+                    <?= Yii::t('notification', 'Preferences') ?>
+                </a>
+            </li>
         </ul>
     </div>
 </div>

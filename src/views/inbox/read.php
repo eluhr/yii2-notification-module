@@ -42,12 +42,6 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
     </div>
     <div class="mailbox-controls with-border text-center hidden-print">
         <div class="btn-group">
-            <?= Html::a(FA::icon(FA::_PRINT), 'javascript:void(0)', [
-                'class' => 'btn btn-default btn-sm',
-                'data-print' => 'message-box'
-            ]) ?>
-        </div>
-        <div class="btn-group">
             <?php if (Yii::$app->user->can(Permission::COMPOSE_A_MESSAGE)): ?>
                 <?= Html::a(FA::icon(FA::_REPLY), [
                     'compose',

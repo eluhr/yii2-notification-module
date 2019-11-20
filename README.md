@@ -10,6 +10,7 @@ composer require eluhr/notification
 ## Configuration
 
 ````php
+use eluhr\notification\components\Notification as NotificationComponent;
 use eluhr\notification\Module as NotificationModule;
 ...
 'modules' => [
@@ -20,6 +21,13 @@ use eluhr\notification\Module as NotificationModule;
         'root' => [
             '@vendor/eluhr/yii2-notification-module/src'
         ]
+    ]
+],
+'components' => [
+    'notification' => [
+        'class' => NotificationComponent::class,
+        'mailer' => 'mailer', // OPTIONAL: Default -> mailer
+        'fromEmail' => 'notifications@domain.com' // REQUIRED
     ]
 ],
 'controllerMap' => [

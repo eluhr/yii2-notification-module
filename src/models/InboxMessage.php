@@ -4,8 +4,12 @@ namespace eluhr\notification\models;
 
 
 use Da\User\Model\User;
+use eluhr\notification\components\helpers\User as UserHelper;
+use eluhr\notification\components\Notification;
 use eluhr\notification\models\query\InboxMessage as InboxMessageQuery;
 use Yii;
+use yii\mail\MailerInterface;
+use yii\mail\MessageInterface;
 
 /**
  * @package eluhr\notification\models
@@ -100,5 +104,28 @@ class InboxMessage extends ActiveRecord
         ];
         $rules['safe-rule'] = ['read', 'safe'];
         return $rules;
+    }
+
+    public function beforeSave($insert)
+    {
+        if (UserHelper::preferences($this->receiver_id)->wants_to_additionally_receive_messages_by_mail === 1) {
+            /** @var Notification $notificationComponent */
+            $notificationComponent = Yii::$app->notification;
+            $message = $this->message;
+            /** @var MessageInterface $mail */
+            $mail = Yii::$app->{$notificationComponent->mailerComponentName}->compose()
+                ->setFrom($notificationComponent->fromEmail)
+                ->setReplyTo($message->author->email)
+                ->setTo($this->receiver->email)
+                ->setSubject($message->subject)
+                ->setHtmlBody($message->text)
+                ->setTextBody($message->text);
+
+            if (!$mail->send()) {
+                Yii::error("User #{$this->receiver_id} with mail {$this->receiver->email} cannot receive emails");
+                Yii::$app->session->addFlash(Yii::t('notification', 'Error while receiving message by mail'));
+            }
+        }
+        return parent::beforeSave($insert);
     }
 }
