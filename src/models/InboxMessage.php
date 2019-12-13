@@ -103,7 +103,7 @@ class InboxMessage extends ActiveRecord
 
     public function beforeSave($insert)
     {
-        if (UserHelper::preferences($this->receiver_id)->wants_to_additionally_receive_messages_by_mail === 1) {
+        if ($insert && UserHelper::preferences($this->receiver_id)->wants_to_additionally_receive_messages_by_mail === 1) {
             /** @var Notification $notificationComponent */
             $notificationComponent = Yii::$app->notification;
             $message = $this->message;
