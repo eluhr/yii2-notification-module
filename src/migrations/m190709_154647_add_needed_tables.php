@@ -38,6 +38,10 @@ CREATE TABLE IF NOT EXISTS `{$userGroupTableName}` (
     REFERENCES `{$userTableName}` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+SQL
+        );
+
+        $this->execute(<<<SQL
 
 CREATE TABLE IF NOT EXISTS `{$userGroupXUserTableName}` (
   `message_user_group_id` INT(11) NOT NULL,
@@ -57,6 +61,10 @@ CREATE TABLE IF NOT EXISTS `{$userGroupXUserTableName}` (
     REFERENCES `{$userTableName}` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE);
+SQL
+        );
+
+        $this->execute(<<<SQL
 
 CREATE TABLE IF NOT EXISTS `{$messageTableName}` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -73,6 +81,10 @@ CREATE TABLE IF NOT EXISTS `{$messageTableName}` (
     REFERENCES `{$userTableName}` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+SQL
+        );
+
+        $this->execute(<<<SQL
 
 CREATE TABLE IF NOT EXISTS `{$inboxMessageTableName}` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
