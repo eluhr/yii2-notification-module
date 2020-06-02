@@ -9,5 +9,18 @@ namespace eluhr\notification;
  */
 class Module extends \yii\base\Module
 {
+    /**
+     * @var string
+     */
     public $defaultRoute = 'inbox';
+
+    /**
+     * @var int
+     */
+    public $inboxMaxSelectionLength = 20;
+
+    /**
+     * @var bool
+     */
+    public $inboxShowToggleAll = true;
 }
