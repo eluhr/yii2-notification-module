@@ -7,6 +7,7 @@ use eluhr\notification\components\helpers\Permission;
 use eluhr\notification\components\helpers\User as UserHelper;
 use eluhr\notification\models\query\Message as MessageQuery;
 use Yii;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
@@ -162,7 +163,7 @@ class Message extends ActiveRecord
     public function beforeSave($insert)
     {
         if ($this->isNewRecord) {
-            $this->send_at = date('Y-m-d H:i:s');
+            $this->send_at = new Expression('NOW()');
         }
 
         return parent::beforeSave($insert);
