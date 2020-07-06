@@ -23,13 +23,13 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
             $previousInboxMessageModel = $inboxMessageModel->previous;
             echo Html::a(FA::icon(FA::_CHEVRON_LEFT),
                 $previousInboxMessageModel ? ['read', 'inboxMessageId' => $previousInboxMessageModel->id] : '#',
-                ['class' => 'btn btn-default' . ($previousInboxMessageModel === null ? ' disabled' : '')]) ?>
+                ['class' => ['btn btn-default', $previousInboxMessageModel === null ? ' disabled' : ''], 'title' => Yii::t('notification', 'Go to previous message')]) ?>
             <?php
             $nextInboxMessageModel = $inboxMessageModel->next;
             echo Html::a(FA::icon(FA::_CHEVRON_RIGHT), $nextInboxMessageModel !== null ? [
                 'read',
                 'inboxMessageId' => $nextInboxMessageModel->id
-            ] : '#', ['class' => 'btn btn-default' . ($nextInboxMessageModel === null ? ' disabled' : '')]) ?>
+            ] : '#', ['class' => ['btn btn-default', $nextInboxMessageModel === null ? ' disabled' : ''], 'title' => Yii::t('notification', 'Go to next message')]) ?>
         </div>
     </div>
     <div class="mailbox-read-info">
@@ -46,12 +46,12 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
                     'compose',
                     'messageId' => $inboxMessageModel->message_id,
                     'replyTo' => $inboxMessageModel->message->author_id
-                ], ['class' => 'btn btn-default btn-sm']) ?>
+                ], ['class' => 'btn btn-default btn-sm', 'title' => Yii::t('notification', 'Reply to message')]) ?>
 
                 <?= Html::a(FA::icon(FA::_SHARE), [
                     'compose',
                     'messageId' => $inboxMessageModel->message_id,
-                ], ['class' => 'btn btn-default btn-sm']) ?>
+                ], ['class' => 'btn btn-default btn-sm', 'title' => Yii::t('notification', 'Forward message')]) ?>
             <?php endif; ?>
         </div>
         <div class="btn-group">
@@ -60,6 +60,7 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
                 'inboxMessageId' => $inboxMessageModel->id,
             ], [
                 'class' => 'btn btn-danger btn-sm',
+                'title' => Yii::t('notification', 'Delete message'),
                 'data-method' => 'post',
                 'data-confirm' => Yii::t('notification', 'Are you sure you want to delete this message?')
             ]) ?>

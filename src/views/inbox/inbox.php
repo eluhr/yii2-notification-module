@@ -14,6 +14,7 @@ use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\web\View;
 
+
 $this->beginContent(__DIR__ . '/notification-layout.php');
 ?>
 

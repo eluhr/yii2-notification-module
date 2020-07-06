@@ -6,6 +6,12 @@ namespace eluhr\notification;
 /**
  * @package eluhr\notification
  * @author Elias Luhr <elias.luhr@gmail.com>
+ *
+ * --- PROPERTIES ---
+ *
+ * @property string $defaultRoute
+ * @property int $inboxMaxSelectionLength
+ * @property bool $inboxShowToggleAll
  */
 class Module extends \yii\base\Module
 {

@@ -6,6 +6,7 @@ use Da\User\Model\User;
 use eluhr\notification\components\helpers\Permission;
 use eluhr\notification\components\helpers\User as UserHelper;
 use eluhr\notification\models\query\Message as MessageQuery;
+use eluhr\notification\Module;
 use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
@@ -28,6 +29,7 @@ use yii\helpers\Html;
  * @property \yii\db\ActiveRecord|null|array $previous
  * @property \yii\db\ActiveRecord|null|array $next
  * @property string $receiverNames
+ * @property mixed $inboxMessages
  * @property int[] $receiverIds Array of user id's
  */
 class Message extends ActiveRecord
@@ -37,6 +39,24 @@ class Message extends ActiveRecord
     const PRIORITY_HIGH = 2;
 
     public $receiverIds;
+
+    public static $receiversLimit;
+    public $moduleId = 'notification';
+
+
+    public function init()
+    {
+        parent::init();
+
+        if (empty(static::$receiversLimit)) {
+            $module = Yii::$app->getModule($this->moduleId);
+            if ($module instanceof  Module) {
+                static::$receiversLimit = $module->inboxMaxSelectionLength;
+            } else {
+                Yii::error(Yii::t('notification','Module with ID "{moduleId}" is not an instance of {modelClass}', ['moduleId' => $this->moduleId,'moduleClass' => Module::class]));
+            }
+        }
+    }
 
     /**
      * @return string
@@ -51,12 +71,17 @@ class Message extends ActiveRecord
      */
     public function getReceiverNames()
     {
-        $receiverModels = User::findAll(['id' => explode(',', $this->all_receiver_ids)]);
+        $receiverModels = User::findAll(['id' => ArrayHelper::getColumn($this->getInboxMessages()->asArray()->all(), 'receiver_id')]);
         $receiverNames = [];
         foreach ($receiverModels as $receiverModel) {
             $receiverNames[] = $receiverModel->username;
         }
         return $receiverNames;
+    }
+
+    public function getInboxMessages()
+    {
+        return $this->hasMany(InboxMessage::class, ['message_id' => 'id']);
     }
 
     /**
@@ -84,8 +109,8 @@ class Message extends ActiveRecord
     }
 
     /**
-     * @return array
      * @throws \yii\base\InvalidConfigException
+     * @return array
      */
     public static function possibleRecipients()
     {
@@ -108,8 +133,8 @@ class Message extends ActiveRecord
     }
 
     /**
-     * @return array
      * @throws \yii\base\InvalidConfigException
+     * @return array
      */
     protected static function possibleUserGroups()
     {
@@ -150,9 +175,22 @@ class Message extends ActiveRecord
             'targetClass' => User::class,
             'targetAttribute' => ['author_id' => 'id']
         ];
+        $rules['receiver-limit-rule'] = [
+            'receiverIds',
+            'validateReceiverLimit'
+        ];
         $rules['safe-rule'] = ['send_at', 'safe'];
         $rules['int-rule'] = ['priority', 'integer'];
         return $rules;
+    }
+
+    public function validateReceiverLimit()
+    {
+        $limit = static::$receiversLimit;
+        $receivers = static::receiverIdsByPossibleRecipients($this->receiverIds);
+        if (count($receivers) > $limit) {
+            $this->addError('receiverIds', Yii::t('notification','You cannot send a message to more than {limit} receivers', ['limit' => $limit]));
+        }
     }
 
     /**
@@ -170,8 +208,8 @@ class Message extends ActiveRecord
     }
 
     /**
-     * @return null|array|\yii\db\ActiveRecord
      * @throws \yii\base\InvalidConfigException
+     * @return null|array|\yii\db\ActiveRecord
      */
     public function getNext()
     {
@@ -179,8 +217,8 @@ class Message extends ActiveRecord
     }
 
     /**
-     * @return MessageQuery|object|\yii\db\ActiveQuery
      * @throws \yii\base\InvalidConfigException
+     * @return MessageQuery|object|\yii\db\ActiveQuery
      */
     public static function find()
     {
@@ -188,8 +226,8 @@ class Message extends ActiveRecord
     }
 
     /**
-     * @return null|array|\yii\db\ActiveRecord
      * @throws \yii\base\InvalidConfigException
+     * @return null|array|\yii\db\ActiveRecord
      */
     public function getPrevious()
     {
@@ -200,9 +238,9 @@ class Message extends ActiveRecord
      * @param bool $insert
      * @param array $changedAttributes
      *
-     * @return bool|void
      * @throws \yii\db\Exception
      * @throws \Throwable
+     * @return bool|void
      */
     public function afterSave($insert, $changedAttributes)
     {

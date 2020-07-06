@@ -23,12 +23,12 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
             $previousMessageModel = $messageModel->previous;
             echo Html::a(FA::icon(FA::_CHEVRON_LEFT),
                 $previousMessageModel ? ['read-sent', 'messageId' => $previousMessageModel->id] : '#',
-                ['class' => 'btn btn-default' . ($previousMessageModel === null ? ' disabled' : '')]) ?>
+                ['class' => ['btn btn-default', $previousMessageModel === null ? ' disabled' : ''], 'title' => Yii::t('notification', 'Go to previous message')]) ?>
             <?php
             $nextMessageModel = $messageModel->next;
             echo Html::a(FA::icon(FA::_CHEVRON_RIGHT),
                 $nextMessageModel !== null ? ['read-sent', 'messageId' => $nextMessageModel->id] : '#',
-                ['class' => 'btn btn-default' . ($nextMessageModel === null ? ' disabled' : '')]) ?>
+                ['class' => ['btn btn-default', $nextMessageModel === null ? ' disabled' : ''], 'title' => Yii::t('notification', 'Go to next message')]) ?>
         </div>
     </div>
     <div class="mailbox-read-info">
@@ -46,12 +46,12 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
                     'compose',
                     'messageId' => $messageModel->id,
                     'replyTo' => $messageModel->author_id
-                ], ['class' => 'btn btn-default btn-sm']) ?>
+                ], ['class' => 'btn btn-default btn-sm', 'title' => Yii::t('notification', 'Reply to message')]) ?>
 
                 <?= Html::a(FA::icon(FA::_SHARE), [
                     'compose',
                     'messageId' => $messageModel->id,
-                ], ['class' => 'btn btn-default btn-sm']) ?>
+                ], ['class' => 'btn btn-default btn-sm', 'title' => Yii::t('notification', 'Forward message')]) ?>
             <?php endif; ?>
         </div>
 
