@@ -33,7 +33,7 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
         </div>
     </div>
     <div class="mailbox-read-info">
-        <h3><?= $inboxMessageModel->message->subject ?></h3>
+        <h3><?= Html::encode($inboxMessageModel->message->subject) ?></h3>
         <h5><?= Yii::t('notification', 'From: {author-username}',
                 ['author-username' => $inboxMessageModel->message->author->username]) ?>
             <span class="mailbox-read-time pull-right"><?= Yii::$app->formatter->asRelativeTime($inboxMessageModel->message->send_at) ?></span>

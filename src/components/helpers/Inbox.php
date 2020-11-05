@@ -71,7 +71,7 @@ class Inbox
                 ],
                 [
                     'value' => function (InboxMessage $model) {
-                        return $model->message->subject;
+                        return Html::encode($model->message->subject);
                     }
                 ],
                 [
@@ -246,7 +246,7 @@ class Inbox
             'columns' => [
                 [
                     'value' => function (Message $model) {
-                        return $model->subject;
+                        return Html::encode($model->subject);
                     }
                 ],
                 [

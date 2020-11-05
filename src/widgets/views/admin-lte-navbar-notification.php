@@ -47,7 +47,7 @@ use yii\helpers\Url;
                                     <?= $message->author->username ?>
                                     <small><?= FA::icon(FA::_CLOCK_O) ?> <?= Yii::$app->formatter->asRelativeTime($message->send_at) ?></small>
                                 </h4>
-                                <p><?= $message->subject ?></p>
+                                <p><?= Html::encode($message->subject) ?></p>
                             </a>
                         </li>
                     <?php

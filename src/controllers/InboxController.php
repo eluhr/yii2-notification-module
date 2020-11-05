@@ -282,7 +282,7 @@ class InboxController extends Controller
             $replyMessageModel = Message::findOne($messageId);
 
             if ($replyMessageModel !== null) {
-                $messageModel->subject = (!empty($replyTo) ? 'Re' : 'Fwd') . ': ' . $replyMessageModel->subject;
+                $messageModel->subject = (!empty($replyTo) ? 'Re' : 'Fwd') . ': ' . Html::encode($replyMessageModel->subject);
                 $messageModel->text = '<br>' . Html::tag('blockquote', $replyMessageModel->text);
                 if (!empty($replyTo)) {
                     $messageModel->receiverIds[] = $replyTo;

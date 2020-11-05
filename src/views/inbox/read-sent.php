@@ -32,7 +32,7 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
         </div>
     </div>
     <div class="mailbox-read-info">
-        <h3><?= $messageModel->subject ?></h3>
+        <h3><?= Html::encode($messageModel->subject) ?></h3>
         <h5><?= Yii::t('notification', 'From: {author-username}',
                 ['author-username' => $messageModel->author->username]) ?></h5>
         <h5><?= Yii::t('notification', 'To: {receiver-names}', ['receiver-names' => $messageModel->receiverLabels()]) ?>
