@@ -58,6 +58,12 @@ class Message extends ActiveRecord
         }
     }
 
+    public function beforeValidate()
+    {
+        $this->text = preg_replace('#<script(.*?)>(.*?)</script>#is', '',  $this->text);
+        return parent::beforeValidate();
+    }
+
     /**
      * @return string
      */
