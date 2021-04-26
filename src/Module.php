@@ -10,7 +10,7 @@ namespace eluhr\notification;
  * --- PROPERTIES ---
  *
  * @property string $defaultRoute
- * @property int $inboxMaxSelectionLength
+ * @property int|null $inboxMaxSelectionLength
  * @property bool $inboxShowToggleAll
  */
 class Module extends \yii\base\Module
@@ -21,7 +21,8 @@ class Module extends \yii\base\Module
     public $defaultRoute = 'inbox';
 
     /**
-     * @var int
+     * If set to null, there is no limit in max receivers
+     * @var int|null
      */
     public $inboxMaxSelectionLength = 20;
 

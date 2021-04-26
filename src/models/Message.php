@@ -193,9 +193,11 @@ class Message extends ActiveRecord
     public function validateReceiverLimit()
     {
         $limit = static::$receiversLimit;
-        $receivers = static::receiverIdsByPossibleRecipients($this->receiverIds);
-        if (count($receivers) > $limit) {
-            $this->addError('receiverIds', Yii::t('notification','You cannot send a message to more than {limit} receivers', ['limit' => $limit]));
+        if (!empty($limit)) {
+            $receivers = static::receiverIdsByPossibleRecipients($this->receiverIds);
+            if (count($receivers) > $limit) {
+                $this->addError('receiverIds', Yii::t('notification','You cannot send a message to more than {limit} receivers', ['limit' => $limit]));
+            }
         }
     }
 
