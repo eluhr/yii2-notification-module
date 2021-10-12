@@ -30,4 +30,9 @@ class Module extends \yii\base\Module
      * @var bool
      */
     public $inboxShowToggleAll = true;
+
+    /**
+     * @var
+     */
+    public $senderTemplate = 'author-username';
 }

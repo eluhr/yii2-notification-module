@@ -66,7 +66,7 @@ class Inbox
                 ],
                 [
                     'value' => function (InboxMessage $model) {
-                        return $model->message->author->username;
+                        return User::concatenateMessageSenderNames($model);
                     }
                 ],
                 [
