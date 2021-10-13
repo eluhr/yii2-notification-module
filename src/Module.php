@@ -34,5 +34,5 @@ class Module extends \yii\base\Module
     /**
      * @var
      */
-    public $senderTemplate = 'author-username';
+    public $senderTemplate = '{author-username}';
 }
