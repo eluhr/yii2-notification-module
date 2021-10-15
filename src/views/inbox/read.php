@@ -7,7 +7,7 @@
  */
 
 use eluhr\notification\components\helpers\Permission;
-use eluhr\notification\components\helpers\User;
+use eluhr\notification\components\helpers\Message as MessageHelper;
 use eluhr\notification\models\InboxMessage;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
