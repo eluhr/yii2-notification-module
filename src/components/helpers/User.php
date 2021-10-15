@@ -47,7 +47,7 @@ class User
         $replacement = [
             '{author-username}' => $inboxMessageModel->message->author->username,
             '{profile-name}' => $inboxMessageModel->message->author->profile->first_name ?? '',
-            '{profile-last_name}' => $inboxMessageModel->message->author->profile->last_name ?? '',
+            '{profile-last_name}' => $inboxMessageModel->message->author->profile->surname ?? '',
         ];
         return strtr(\Yii::$app->controller->module->senderTemplate, $replacement);
     }
