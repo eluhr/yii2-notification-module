@@ -80,7 +80,7 @@ class Message extends ActiveRecord
         $receiverModels = User::findAll(['id' => ArrayHelper::getColumn($this->getInboxMessages()->asArray()->all(), 'receiver_id')]);
         $receiverNames = [];
         foreach ($receiverModels as $receiverModel) {
-            $receiverNames[] = $receiverModel->username;
+            $receiverNames[] = UserHelper::concatenateUserName($receiverModel);
         }
         return $receiverNames;
     }

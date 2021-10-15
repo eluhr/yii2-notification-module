@@ -8,6 +8,7 @@
 
 use eluhr\notification\components\helpers\Permission;
 use eluhr\notification\models\Message;
+use eluhr\notification\components\helpers\Message as MessageHelper;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
 use yii\web\View;
@@ -33,8 +34,9 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
     </div>
     <div class="mailbox-read-info">
         <h3><?= Html::encode($messageModel->subject) ?></h3>
-        <h5><?= Yii::t('notification', 'From: {author-username}',
-                ['author-username' => $messageModel->author->username]) ?></h5>
+        <h5><?= Yii::t('notification', 'From: ') ?>
+            <span class="mailbox-read-from"><?= MessageHelper::concatenateMessageSenderNames($messageModel) ?></span>
+        </h5>
         <h5><?= Yii::t('notification', 'To: {receiver-names}', ['receiver-names' => $messageModel->receiverLabels()]) ?>
             <span class="mailbox-read-time pull-right"><?= Yii::$app->formatter->asRelativeTime($messageModel->send_at) ?></span>
         </h5>

@@ -39,16 +39,16 @@ class User
     }
 
     /**
-     * If present, replace username, name and last name placeholders with user data.
-     * @param $inboxMessageModel
+     * Concatenates user name, first name and surname using the namesTemplate
+     * @param $user
      * @return string
      */
-    public static function concatenateMessageSenderNames($inboxMessageModel) {
+    public static function concatenateUserName($user) {
         $replacement = [
-            '{author-username}' => $inboxMessageModel->message->author->username,
-            '{profile-name}' => $inboxMessageModel->message->author->profile->first_name ?? '',
-            '{profile-last_name}' => $inboxMessageModel->message->author->profile->surname ?? '',
+            '{author-username}' => $user->username,
+            '{profile-name}' => $user->profile->first_name ?? '',
+            '{profile-last_name}' => $user->profile->surname ?? '',
         ];
-        return strtr(\Yii::$app->controller->module->senderTemplate, $replacement);
+        return strtr(\Yii::$app->controller->module->namesTemplate, $replacement);
     }
 }

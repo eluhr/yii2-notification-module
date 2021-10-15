@@ -4,6 +4,7 @@
 namespace eluhr\notification\components\helpers;
 
 
+use eluhr\notification\components\helpers\Message as MessageHelper;
 use eluhr\notification\models\InboxMessage;
 use eluhr\notification\models\Message;
 use eluhr\notification\models\MessageUserGroup;
@@ -66,7 +67,7 @@ class Inbox
                 ],
                 [
                     'value' => function (InboxMessage $model) {
-                        return User::concatenateMessageSenderNames($model);
+                        return MessageHelper::concatenateInboxMessageSenderNames($model);
                     }
                 ],
                 [
