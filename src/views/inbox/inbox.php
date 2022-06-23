@@ -50,7 +50,7 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
                 ]) ?>
         </div>
         <?= GridView::widget(Inbox::inboxGridViewConfig($unreadInboxMessageDataProvider,
-            $inboxMessageSearchModel, true)) ?>
+            $inboxMessageSearchModel, $this->context->module->checkboxEnabled)) ?>
         <?= Html::endForm() ?>
     <?php endif; ?>
     <?php
@@ -79,7 +79,7 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
                 ]) ?>
         </div>
         <?= GridView::widget(Inbox::inboxGridViewConfig($everythingElseInboxMessageDataProvider,
-        $inboxMessageSearchModel, true)) ?>
+        $inboxMessageSearchModel, $this->context->module->checkboxEnabled)) ?>
         <?= Html::endForm() ?>
     <?php
     endif;
