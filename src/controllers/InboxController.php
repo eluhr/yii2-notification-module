@@ -18,6 +18,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\helpers\VarDumper;
 
 /**
  * @package eluhr\notification\controllers
@@ -44,7 +45,8 @@ class InboxController extends Controller
                         'sent',
                         'read-sent',
                         'delete-user-group',
-                        'mark-inbox-message'
+                        'mark-inbox-message',
+                        'context-action'
                     ],
                     'roles' => ['@'],
                 ],
@@ -69,7 +71,8 @@ class InboxController extends Controller
             'actions' => [
                 'delete-inbox-message' => ['POST'],
                 'mark-inbox-message' => ['POST'],
-                'delete-user-group' => ['POST']
+                'delete-user-group' => ['POST'],
+                'context_action' => ['POST']
             ]
         ];
         return $behaviors;
@@ -169,22 +172,7 @@ class InboxController extends Controller
      */
     public function actionRead($inboxMessageId)
     {
-        /** @var InboxMessage|null $inboxMessageModel */
-        $inboxMessageModel = InboxMessage::find()->own()->andWhere(['id' => $inboxMessageId])->one();
-
-        if ($inboxMessageModel === null) {
-            throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
-        }
-
-
-        if ($inboxMessageModel->read === 0) {
-            $inboxMessageModel->read = 1;
-            if (!$inboxMessageModel->save()) {
-                Yii::$app->session->addFlash('info',
-                    Yii::t('notification', 'Cannot update read status of this message.'));
-            }
-        }
-
+        $inboxMessageModel = $this->setMessageRead($inboxMessageId);
 
         return $this->render('read', [
             'inboxMessageModel' => $inboxMessageModel
@@ -223,15 +211,7 @@ class InboxController extends Controller
      */
     public function actionDeleteInboxMessage($inboxMessageId)
     {
-        $inboxMessageModel = InboxMessage::find()->own()->andWhere(['id' => $inboxMessageId])->one();
-
-        if ($inboxMessageModel === null) {
-            throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
-        }
-
-        if ($inboxMessageModel->delete() !== false) {
-            Yii::$app->session->addFlash('info', Yii::t('notification', 'Message has been removed.'));
-        }
+        $this->deleteInboxMessage($inboxMessageId);
         return $this->redirect(['index']);
     }
 
@@ -346,5 +326,93 @@ class InboxController extends Controller
         }
 
         return $this->render('preferences', ['model' => $model]);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function actionContextAction()
+    {
+        $post = \Yii::$app->request->post();
+        $messages = $post['checked'] ?? [];
+
+        if(!empty($messages)) {
+            if (\Yii::$app->request->post(Message::SUBMIT_TYPE_NAME) === Message::DELETE_MESSAGE) {
+                foreach ($messages as $messageId){
+                    $this->deleteInboxMessage($messageId);
+                }
+            } else if (\Yii::$app->request->post(Message::SUBMIT_TYPE_NAME) === Message::MARK_MESSAGE_AS_READ){
+                foreach ($messages as $messageId){
+                    $this->setMessageRead($messageId);
+                }
+            } /*
+               TODO: Deleting sent messages currently throws a constraint violation
+               else if (\Yii::$app->request->post(Message::SUBMIT_TYPE_NAME) === Message::DELETE_SENT_MESSAGE){
+                foreach ($messages as $messageId){
+                    $this->deleteSentMessage($messageId);
+                }
+            }*/
+        }
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * @param $inboxMessageId
+     * @return InboxMessage|null
+     */
+    private function setMessageRead($inboxMessageId, $readStatus = 1)
+    {
+        /** @var InboxMessage|null $inboxMessageModel */
+        $inboxMessageModel = InboxMessage::find()->own()->andWhere(['id' => $inboxMessageId])->one();
+
+        if ($inboxMessageModel === null) {
+            throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
+        }
+
+        if ($inboxMessageModel->read === 0) {
+            $inboxMessageModel->read = $readStatus;
+            if (!$inboxMessageModel->save()) {
+                Yii::$app->session->addFlash('info',
+                    Yii::t('notification', 'Cannot update read status of this message.'));
+            }
+        }
+        return $inboxMessageModel;
+    }
+
+    /**
+     * @param $inboxMessageId
+     * @return void
+     */
+    private function deleteInboxMessage($inboxMessageId)
+    {
+        $inboxMessageModel = InboxMessage::find()->own()->andWhere(['id' => $inboxMessageId])->one();
+        $this->deleteMessage($inboxMessageModel);
+    }
+
+    /**
+     * @param $inboxMessageId
+     * @return void
+     */
+    private function deleteSentMessage($inboxMessageId)
+    {
+        $inboxMessageModel = Message::find()->own()->andWhere(['id' => $inboxMessageId])->one();
+        $this->deleteMessage($inboxMessageModel);
+    }
+
+    /**
+     * @param $messageModel
+     * @return void
+     */
+    private function deleteMessage($messageModel)
+    {
+        if ($messageModel === null) {
+            throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
+        }
+
+        if ($messageModel->delete() !== false) {
+            Yii::$app->session->addFlash('info', Yii::t('notification', 'Message has been removed.'));
+        } else {
+            Yii::$app->session->addFlash('error', Yii::t('notification', 'There was a problem delete this message.'));
+        }
     }
 }

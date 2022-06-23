@@ -20,7 +20,7 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
 <?= $this->render('_header',
     ['inboxMessageSearchModel' => $inboxMessageSearchModel, 'title' => Yii::t('notification', 'Sent')]) ?>
 <div class="box-body">
-    <?= GridView::widget(Inbox::sentGridViewConfig($sendInboxMessageDataProvider, $inboxMessageSearchModel)) ?>
+    <?= GridView::widget(Inbox::sentGridViewConfig($sendInboxMessageDataProvider, $inboxMessageSearchModel, true)) ?>
 </div>
 
 <?php

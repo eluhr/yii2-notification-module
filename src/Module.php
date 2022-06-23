@@ -35,4 +35,10 @@ class Module extends \yii\base\Module
      * @var
      */
     public $namesTemplate = '{author-username}';
+
+    /**
+     * Show checkboxes for bulk delete and mark as read
+     * @var bool
+     */
+    public $checkboxEnabled = false;
 }

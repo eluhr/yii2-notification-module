@@ -37,6 +37,10 @@ class Message extends ActiveRecord
     const PRIORITY_LOW = 0;
     const PRIORITY_NORMAL = 1;
     const PRIORITY_HIGH = 2;
+    const MARK_MESSAGE_AS_READ = "MARK_MESSAGE_AS_READ";
+    const DELETE_MESSAGE = "DELETE_MESSAGE";
+    const SUBMIT_TYPE_NAME = "SUBMIT_TYPE_NAME";
+    const DELETE_SENT_MESSAGE = "DELETE_SENT_MESSAGE";
 
     public $receiverIds;
 

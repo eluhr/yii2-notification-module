@@ -30,7 +30,7 @@ class Inbox
      *
      * @return array
      */
-    public static function inboxGridViewConfig($dataProvider, $searchModel)
+    public static function inboxGridViewConfig($dataProvider, $searchModel, $checkboxEnabled = false)
     {
         return [
             'dataProvider' => $dataProvider,
@@ -47,16 +47,24 @@ class Inbox
             ],
             'rowOptions' => function (InboxMessage $model) {
                 return [
-                    'onclick' => 'window.location.href="' . Url::to(['read', 'inboxMessageId' => $model->id]) . '";'
+                    //'onclick' => 'window.location.href="' . Url::to(['read', 'inboxMessageId' => $model->id]) . '";'
                 ];
             },
-            'showHeader' => false,
+            'showHeader' => true,
             'formatter' => [
                 'class' => Formatter::class,
                 'nullDisplay' => ''
             ],
             'emptyText' => Yii::t('notification', 'You have read all messages in your inbox!'),
             'columns' => [
+                [
+                    'class' => 'yii\grid\CheckboxColumn',
+                    'name' => 'checked',
+                    'visible' => $checkboxEnabled,
+                    'checkboxOptions' => function ($model) {
+                        return ["value" => $model->id];
+                    }
+                ],
                 [
                     'value' => function (InboxMessage $model) {
                         return Html::a(FA::icon((int)$model->marked === 0 ? FA::_FLAG_O : FA::_FLAG,
@@ -67,9 +75,13 @@ class Inbox
                 ],
                 [
                     'value' => function (InboxMessage $model) {
-                        return MessageHelper::concatenateInboxMessageSenderNames($model);
-                    }
+                        return Html::a(MessageHelper::concatenateInboxMessageSenderNames($model),
+                            Url::to(['read', 'inboxMessageId' => $model->id]),
+                            ['data-method' => 'post', 'class' => 'no-border message-link']);
+                    },
+                    'format' => 'raw'
                 ],
+
                 [
                     'value' => function (InboxMessage $model) {
                         return Html::encode($model->message->subject);
@@ -221,7 +233,7 @@ class Inbox
      *
      * @return array
      */
-    public static function sentGridViewConfig($dataProvider, $searchModel)
+    public static function sentGridViewConfig($dataProvider, $searchModel, $checkboxEnabled = false)
     {
         return [
             'dataProvider' => $dataProvider,
@@ -238,7 +250,7 @@ class Inbox
             ],
             'rowOptions' => function (Message $model) {
                 return [
-                    'onclick' => 'window.location.href="' . Url::to(['read-sent', 'messageId' => $model->id]) . '";'
+                    // 'onclick' => 'window.location.href="' . Url::to(['read-sent', 'messageId' => $model->id]) . '";'
                 ];
             },
             'showHeader' => false,
@@ -247,8 +259,11 @@ class Inbox
             'columns' => [
                 [
                     'value' => function (Message $model) {
-                        return Html::encode($model->subject);
-                    }
+                        return Html::a(Html::encode($model->subject),
+                            Url::to(['read-sent', 'messageId' => $model->id]),
+                            ['data-method' => 'post', 'class' => 'no-border message-link']);
+                    },
+                    'format' => 'raw'
                 ],
                 [
                     'value' => function (Message $model) {
