@@ -15,6 +15,7 @@ use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\web\View;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 
 $this->beginContent(__DIR__ . '/notification-layout.php');
@@ -29,7 +30,7 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
     $notEmptyOnQuery = empty($inboxMessageSearchModel->q) || (!empty($inboxMessageSearchModel->q) && (int)$unreadInboxMessageDataProvider->query->count());
     if ($notEmptyOnQuery): ?>
         <h5 class="box-title"><?= Yii::t('notification', 'Unread') ?></h5>
-        <?= Html::beginForm('context-action', 'POST'); ?>
+        <?= Html::beginForm(Url::to('/notification/inbox/context-action'), 'POST'); ?>
         <div class="btn-group pull-right notification-context-btn-group">
             <?= Html::submitButton(\Yii::t('frontend', 'Mark selected as read'),
                 [
@@ -58,7 +59,7 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
     if ($emptyOnQuery):
         ?>
         <h5 class="box-title"><?= Yii::t('notification', 'Everything else') ?></h5>
-        <?= Html::beginForm('context-action', 'POST'); ?>
+        <?= Html::beginForm(Url::to('/notification/inbox/context-action'), 'POST'); ?>
         <div class="btn-group pull-right notification-context-btn-group">
             <?= Html::submitButton(\Yii::t('frontend', 'Mark selected as read'),
                 [
