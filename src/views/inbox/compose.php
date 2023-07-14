@@ -36,8 +36,6 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
         ]
     ])->label(false);
 
-    echo $form->field($messageModel, 'author_id')->hiddenInput()->label(false);
-
     echo $form->field($messageModel, 'subject')->textInput([
         'placeholder' => Yii::t('notification', 'Subject:')
     ])->label(false);

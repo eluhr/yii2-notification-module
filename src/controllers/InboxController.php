@@ -19,6 +19,7 @@ use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\helpers\VarDumper;
+use yii\web\Response;
 
 /**
  * @package eluhr\notification\controllers
@@ -242,14 +243,17 @@ class InboxController extends Controller
      * @param null $messageId
      * @param null $replyTo
      *
-     * @return string
+     * @return string|Response
      */
     public function actionCompose($messageId = null, $replyTo = null)
     {
-        $messageModel = new Message();
-        $messageModel->author_id = Yii::$app->user->id;
+        $userId = Yii::$app->user->id;
+        $messageModel = new Message([
+            'author_id' => $userId
+        ]);
 
         if ($messageModel->load(Yii::$app->request->post())) {
+            $messageModel->setAttribute('author_id', $userId);
             if ($messageModel->validate() && $messageModel->save()) {
                 Yii::$app->session->addFlash('success', Yii::t('notification', 'Message send successfully.'));
                 return $this->redirect(['index']);
