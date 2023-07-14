@@ -191,6 +191,7 @@ class Message extends ActiveRecord
         ];
         $rules['safe-rule'] = ['send_at', 'safe'];
         $rules['int-rule'] = ['priority', 'integer'];
+        $rules['priority-range-rule'] = ['priority', 'in', 'range' => array_keys(static::priorities())];
         return $rules;
     }
 
