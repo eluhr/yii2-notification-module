@@ -14,6 +14,7 @@ use Yii;
 use yii\bootstrap\ButtonDropdown;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
+use yii\helpers\HtmlPurifier;
 use yii\helpers\Url;
 use yii\i18n\Formatter;
 use yii\widgets\LinkPager;
@@ -84,7 +85,7 @@ class Inbox
 
                 [
                     'value' => function (InboxMessage $model) {
-                        return Html::encode($model->message->subject);
+                        return Html::encode(HtmlPurifier::process($model->message->subject));
                     }
                 ],
                 [
@@ -259,7 +260,7 @@ class Inbox
             'columns' => [
                 [
                     'value' => function (Message $model) {
-                        return Html::a(Html::encode($model->subject),
+                        return Html::a(Html::encode(HtmlPurifier::process($model->subject)),
                             Url::to(['read-sent', 'messageId' => $model->id]),
                             ['data-method' => 'post', 'class' => 'no-border message-link']);
                     },
