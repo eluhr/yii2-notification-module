@@ -94,7 +94,7 @@ class Inbox
                 ],
                 [
                     'value' => function (InboxMessage $model) {
-                        return Html::tag('b', str_repeat('!', $model->message->priority));
+                        return Html::tag('b', str_repeat('!', (int)$model->message->priority));
                     },
                     'format' => 'raw'
                 ],
@@ -272,7 +272,7 @@ class Inbox
                 ],
                 [
                     'value' => function (Message $model) {
-                        return Html::tag('b', str_repeat('!', $model->priority));
+                        return Html::tag('b', str_repeat('!', (int)$model->priority));
                     },
                     'format' => 'raw'
                 ],

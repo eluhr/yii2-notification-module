@@ -37,7 +37,8 @@ class InboxMessage extends InboxMessageModel
     {
         return [
             [['q','sort'], 'safe'],
-            ['sort', 'integer']
+            ['sort', 'integer'],
+            ['q', 'filter', 'filter' => 'strip_tags']
         ];
     }
 
@@ -66,7 +67,7 @@ class InboxMessage extends InboxMessageModel
         $this->load($params);
 
         $query->joinWith('message');
-        $query->orFilterWhere(['LIKE', 'text', strip_tags($this->q)]);
+        $query->orFilterWhere(['LIKE', 'text', $this->q]);
         $query->orFilterWhere(['LIKE', 'subject', $this->q]);
 
         $query->leftJoin(User::tableName(), Message::tableName() . '.author_id = ' . User::tableName() . '.id');
@@ -96,7 +97,7 @@ class InboxMessage extends InboxMessageModel
 
         $this->load($params);
 
-        $query->orFilterWhere(['LIKE', 'text', strip_tags($this->q)]);
+        $query->orFilterWhere(['LIKE', 'text', $this->q]);
         $query->orFilterWhere(['LIKE', 'subject', $this->q]);
 
         $query->orderBy(['created_at' => SORT_DESC]);
