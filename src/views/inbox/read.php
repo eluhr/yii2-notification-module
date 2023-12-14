@@ -11,6 +11,7 @@ use eluhr\notification\components\helpers\Message as MessageHelper;
 use eluhr\notification\models\InboxMessage;
 use rmrevin\yii\fontawesome\FA;
 use yii\helpers\Html;
+use yii\helpers\HtmlPurifier;
 use yii\web\View;
 
 $this->beginContent(__DIR__ . '/notification-layout.php');
@@ -69,7 +70,7 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
 
     </div>
     <div class="mailbox-read-message">
-        <?= $inboxMessageModel->message->text ?>
+        <?= HtmlPurifier::process($inboxMessageModel->message->text) ?>
     </div>
 </div>
 <?php
