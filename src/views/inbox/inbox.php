@@ -31,25 +31,27 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
     if ($notEmptyOnQuery): ?>
         <h5 class="box-title"><?= Yii::t('notification', 'Unread') ?></h5>
         <?= Html::beginForm(Url::to(['context-action']), 'POST'); ?>
-        <div class="btn-group pull-right notification-context-btn-group">
-            <?= Html::submitButton(\Yii::t('frontend', 'Mark selected as read'),
-                [
-                    'id' => 'mark-read-message',
-                    'class' => 'btn btn-primary',
-                    'name' => Message::SUBMIT_TYPE_NAME,
-                    'value' => Message::MARK_MESSAGE_AS_READ
-                ])
-            ?>
-            <?= Html::submitButton(\Yii::t('frontend', 'Delete selected'),
-                [
-                    'id' => 'delete-message',
-                    'class' => 'btn btn-danger',
-                    // TODO add the confirm and keep the name/value in the request
-                    //'data-confirm' => "Are you sure you want to delete the selected messages?",
-                    'name' => Message::SUBMIT_TYPE_NAME,
-                    'value' => Message::DELETE_MESSAGE
-                ]) ?>
-        </div>
+        <?php if ($this->context->module->checkboxEnabled):?>
+            <div class="btn-group pull-right notification-context-btn-group">
+                <?= Html::submitButton(\Yii::t('frontend', 'Mark selected as read'),
+                    [
+                        'id' => 'mark-read-message',
+                        'class' => 'btn btn-primary',
+                        'name' => Message::SUBMIT_TYPE_NAME,
+                        'value' => Message::MARK_MESSAGE_AS_READ
+                    ])
+                ?>
+                <?= Html::submitButton(\Yii::t('frontend', 'Delete selected'),
+                    [
+                        'id' => 'delete-message',
+                        'class' => 'btn btn-danger',
+                        // TODO add the confirm and keep the name/value in the request
+                        //'data-confirm' => "Are you sure you want to delete the selected messages?",
+                        'name' => Message::SUBMIT_TYPE_NAME,
+                        'value' => Message::DELETE_MESSAGE
+                    ]) ?>
+            </div>
+        <?php endif ?>
         <?= GridView::widget(Inbox::inboxGridViewConfig($unreadInboxMessageDataProvider,
             $inboxMessageSearchModel, $this->context->module->checkboxEnabled)) ?>
         <?= Html::endForm() ?>
@@ -60,25 +62,19 @@ $this->beginContent(__DIR__ . '/notification-layout.php');
         ?>
         <h5 class="box-title"><?= Yii::t('notification', 'Everything else') ?></h5>
         <?= Html::beginForm(Url::to(['context-action']), 'POST'); ?>
-        <div class="btn-group pull-right notification-context-btn-group">
-            <?= Html::submitButton(\Yii::t('frontend', 'Mark selected as read'),
-                [
-                    'id' => 'mark-read-message',
-                    'class' => 'btn btn-primary',
-                    'name' => Message::SUBMIT_TYPE_NAME,
-                    'value' => Message::MARK_MESSAGE_AS_READ
-                ])
-            ?>
-            <?= Html::submitButton(\Yii::t('frontend', 'Delete selected'),
-                [
-                    'id' => 'delete-message',
-                    'class' => 'btn btn-danger',
-                    // TODO add the confirm and keep the name/value in the request
-                    //'data-confirm' => "Are you sure you want to delete the selected messages?",
-                    'name' => Message::SUBMIT_TYPE_NAME,
-                    'value' => Message::DELETE_MESSAGE
-                ]) ?>
-        </div>
+        <?php if ($this->context->module->checkboxEnabled):?>
+            <div class="btn-group pull-right notification-context-btn-group">
+                <?= Html::submitButton(\Yii::t('frontend', 'Delete selected'),
+                    [
+                        'id' => 'delete-message',
+                        'class' => 'btn btn-danger',
+                        // TODO add the confirm and keep the name/value in the request
+                        //'data-confirm' => "Are you sure you want to delete the selected messages?",
+                        'name' => Message::SUBMIT_TYPE_NAME,
+                        'value' => Message::DELETE_MESSAGE
+                    ]) ?>
+            </div>
+        <?php endif ?>
         <?= GridView::widget(Inbox::inboxGridViewConfig($everythingElseInboxMessageDataProvider,
         $inboxMessageSearchModel, $this->context->module->checkboxEnabled)) ?>
         <?= Html::endForm() ?>

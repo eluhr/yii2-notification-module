@@ -53,5 +53,7 @@ use yii\helpers\Url;
         </ul>
     </div>
 </div>
-<?= Html::a(Yii::t('notification', 'Reload'), Yii::$app->request->url,
-    ['class' => 'btn btn-block btn-default margin-bottom']) ?>
+<div class="form-group">
+    <?= Html::a(Yii::t('notification', 'Reload'), Yii::$app->request->url,
+        ['class' => 'btn btn-block btn-default margin-bottom']) ?>
+</div>
