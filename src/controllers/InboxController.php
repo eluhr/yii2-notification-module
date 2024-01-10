@@ -18,7 +18,6 @@ use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\helpers\VarDumper;
 use yii\web\Response;
 
 /**
@@ -41,6 +40,7 @@ class InboxController extends Controller
                     'actions' => [
                         'index',
                         'preferences',
+                        'unread',
                         'read',
                         'delete-inbox-message',
                         'sent',
@@ -82,8 +82,8 @@ class InboxController extends Controller
     /**
      * @param Action $action
      *
-     * @return bool
      * @throws \yii\web\BadRequestHttpException
+     * @return bool
      */
     public function beforeAction($action)
     {
@@ -94,9 +94,9 @@ class InboxController extends Controller
     /**
      * @param $inboxMessageId
      *
-     * @return \yii\web\Response
      * @throws NotFoundHttpException
      * @throws \yii\base\InvalidConfigException
+     * @return \yii\web\Response
      */
     public function actionMarkInboxMessage($inboxMessageId)
     {
@@ -118,9 +118,9 @@ class InboxController extends Controller
     }
 
     /**
-     * @return string
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\base\Exception
+     * @return string
      */
     public function actionIndex()
     {
@@ -136,8 +136,8 @@ class InboxController extends Controller
     }
 
     /**
-     * @return string
      * @throws \yii\base\InvalidConfigException
+     * @return string
      */
     public function actionSent()
     {
@@ -150,9 +150,9 @@ class InboxController extends Controller
     }
 
     /**
-     * @return string
      * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
+     * @return string
      */
     public function actionUserGroup()
     {
@@ -167,9 +167,24 @@ class InboxController extends Controller
     /**
      * @param $inboxMessageId
      *
-     * @return string
      * @throws \yii\base\InvalidConfigException
      * @throws NotFoundHttpException
+     * @return Response
+     */
+    public function actionUnread($inboxMessageId)
+    {
+        if ($this->setMessageRead($inboxMessageId, 0)) {
+            return $this->redirect(['index']);
+        }
+        throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
+    }
+
+    /**
+     * @param $inboxMessageId
+     *
+     * @throws \yii\base\InvalidConfigException
+     * @throws NotFoundHttpException
+     * @return string
      */
     public function actionRead($inboxMessageId)
     {
@@ -183,9 +198,9 @@ class InboxController extends Controller
     /**
      * @param $messageId
      *
-     * @return string
      * @throws \yii\base\InvalidConfigException
      * @throws NotFoundHttpException
+     * @return string
      */
     public function actionReadSent($messageId)
     {
@@ -204,11 +219,11 @@ class InboxController extends Controller
     /**
      * @param $inboxMessageId
      *
-     * @return \yii\web\Response
      * @throws NotFoundHttpException
      * @throws \Throwable
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\StaleObjectException
+     * @return \yii\web\Response
      */
     public function actionDeleteInboxMessage($inboxMessageId)
     {
@@ -219,11 +234,11 @@ class InboxController extends Controller
     /**
      * @param $messageUserGroupId
      *
-     * @return \yii\web\Response
      * @throws NotFoundHttpException
      * @throws \Throwable
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\StaleObjectException
+     * @return \yii\web\Response
      */
     public function actionDeleteUserGroup($messageUserGroupId)
     {
@@ -282,9 +297,9 @@ class InboxController extends Controller
     /**
      * @param null|string $messageUserGroupId
      *
-     * @return string
      * @throws \yii\base\InvalidConfigException
      * @throws NotFoundHttpException
+     * @return string
      */
     public function actionUserGroupEdit($messageUserGroupId = null)
     {
@@ -340,13 +355,13 @@ class InboxController extends Controller
         $post = \Yii::$app->request->post();
         $messages = $post['checked'] ?? [];
 
-        if(!empty($messages)) {
+        if (!empty($messages)) {
             if (\Yii::$app->request->post(Message::SUBMIT_TYPE_NAME) === Message::DELETE_MESSAGE) {
-                foreach ($messages as $messageId){
+                foreach ($messages as $messageId) {
                     $this->deleteInboxMessage($messageId);
                 }
-            } else if (\Yii::$app->request->post(Message::SUBMIT_TYPE_NAME) === Message::MARK_MESSAGE_AS_READ){
-                foreach ($messages as $messageId){
+            } else if (\Yii::$app->request->post(Message::SUBMIT_TYPE_NAME) === Message::MARK_MESSAGE_AS_READ) {
+                foreach ($messages as $messageId) {
                     $this->setMessageRead($messageId);
                 }
             } /*
@@ -362,9 +377,10 @@ class InboxController extends Controller
 
     /**
      * @param $inboxMessageId
+     *
      * @return InboxMessage|null
      */
-    protected function setMessageRead($inboxMessageId, $readStatus = 1)
+    private function setMessageRead($inboxMessageId, $readStatus = 1)
     {
         /** @var InboxMessage|null $inboxMessageModel */
         $inboxMessageModel = InboxMessage::find()->own()->andWhere(['id' => $inboxMessageId])->one();
@@ -373,18 +389,17 @@ class InboxController extends Controller
             throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
         }
 
-        if ($inboxMessageModel->read === 0) {
-            $inboxMessageModel->read = $readStatus;
-            if (!$inboxMessageModel->save()) {
-                Yii::$app->session->addFlash('info',
-                    Yii::t('notification', 'Cannot update read status of this message.'));
-            }
+        $inboxMessageModel->read = $readStatus;
+        if (!$inboxMessageModel->save()) {
+            Yii::$app->session->addFlash('info',
+                Yii::t('notification', 'Cannot update read status of this message.'));
         }
         return $inboxMessageModel;
     }
 
     /**
      * @param $inboxMessageId
+     *
      * @return void
      */
     private function deleteInboxMessage($inboxMessageId)
@@ -395,6 +410,7 @@ class InboxController extends Controller
 
     /**
      * @param $inboxMessageId
+     *
      * @return void
      */
     private function deleteSentMessage($inboxMessageId)
@@ -405,6 +421,7 @@ class InboxController extends Controller
 
     /**
      * @param $messageModel
+     *
      * @return void
      */
     private function deleteMessage($messageModel)
