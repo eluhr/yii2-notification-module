@@ -364,7 +364,7 @@ class InboxController extends Controller
      * @param $inboxMessageId
      * @return InboxMessage|null
      */
-    private function setMessageRead($inboxMessageId, $readStatus = 1)
+    protected function setMessageRead($inboxMessageId, $readStatus = 1)
     {
         /** @var InboxMessage|null $inboxMessageModel */
         $inboxMessageModel = InboxMessage::find()->own()->andWhere(['id' => $inboxMessageId])->one();
