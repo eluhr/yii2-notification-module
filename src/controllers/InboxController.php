@@ -41,6 +41,7 @@ class InboxController extends Controller
                         'index',
                         'preferences',
                         'unread',
+                        'mark-as-read',
                         'read',
                         'delete-inbox-message',
                         'sent',
@@ -126,6 +127,7 @@ class InboxController extends Controller
     {
         $inboxMessageSearchModel = new InboxMessageSearch();
 
+        $this->view->title = Yii::t('notification', 'Inbox');
         return $this->render('inbox', [
             'unreadInboxMessageDataProvider' => $inboxMessageSearchModel->inboxSearch(Yii::$app->request->queryParams,
                 false),
@@ -143,6 +145,7 @@ class InboxController extends Controller
     {
         $inboxMessageSearchModel = new InboxMessageSearch();
 
+        $this->view->title = Yii::t('notification', 'Sent messages');
         return $this->render('sent', [
             'sendInboxMessageDataProvider' => $inboxMessageSearchModel->sentSearch(Yii::$app->request->queryParams),
             'inboxMessageSearchModel' => $inboxMessageSearchModel
@@ -158,6 +161,7 @@ class InboxController extends Controller
     {
         $messageUserGroupSearchModel = new MessageUserGroupSearch();
 
+        $this->view->title = Yii::t('notification', 'User groups');
         return $this->render('user-group', [
             'messageUserGroupSearchModel' => $messageUserGroupSearchModel,
             'messageUserGroupDataProvider' => $messageUserGroupSearchModel->search(Yii::$app->request->queryParams),
@@ -174,7 +178,21 @@ class InboxController extends Controller
     public function actionUnread($inboxMessageId)
     {
         if ($this->setMessageRead($inboxMessageId, 0)) {
-            return $this->redirect(['index']);
+            return $this->goBack(['index']);
+        }
+        throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
+    }
+    /**
+     * @param $inboxMessageId
+     *
+     * @throws \yii\base\InvalidConfigException
+     * @throws NotFoundHttpException
+     * @return Response
+     */
+    public function actionMarkAsRead($inboxMessageId)
+    {
+        if ($this->setMessageRead($inboxMessageId, 1)) {
+            return $this->goBack(['index']);
         }
         throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
     }
@@ -190,6 +208,7 @@ class InboxController extends Controller
     {
         $inboxMessageModel = $this->setMessageRead($inboxMessageId);
 
+        $this->view->title = $inboxMessageModel->message->subject;
         return $this->render('read', [
             'inboxMessageModel' => $inboxMessageModel
         ]);
@@ -211,6 +230,7 @@ class InboxController extends Controller
             throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
         }
 
+        $this->view->title = $messageModel->subject;
         return $this->render('read-sent', [
             'messageModel' => $messageModel
         ]);
@@ -324,6 +344,7 @@ class InboxController extends Controller
             Yii::error($messageUserGroupModel->errors, MessageUserGroup::class);
         }
 
+        $this->view->title = Yii::t('notification', 'Edit User group');
         return $this->render('user-group-edit', [
             'messageUserGroupModel' => $messageUserGroupModel
         ]);
@@ -344,6 +365,7 @@ class InboxController extends Controller
             return $this->refresh();
         }
 
+        $this->view->title = Yii::t('notification', 'Preferences');
         return $this->render('preferences', ['model' => $model]);
     }
 
@@ -364,6 +386,10 @@ class InboxController extends Controller
                 foreach ($messages as $messageId) {
                     $this->setMessageRead($messageId);
                 }
+            } else if (\Yii::$app->request->post(Message::SUBMIT_TYPE_NAME) === Message::MARK_MESSAGE_AS_UNREAD) {
+                foreach ($messages as $messageId) {
+                    $this->setMessageRead($messageId, 0);
+                }
             } /*
                TODO: Deleting sent messages currently throws a constraint violation
                else if (\Yii::$app->request->post(Message::SUBMIT_TYPE_NAME) === Message::DELETE_SENT_MESSAGE){
@@ -372,7 +398,7 @@ class InboxController extends Controller
                 }
             }*/
         }
-        return $this->redirect(['index']);
+        return $this->goBack(['index']);
     }
 
     /**
