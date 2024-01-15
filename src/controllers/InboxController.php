@@ -178,7 +178,7 @@ class InboxController extends Controller
     public function actionUnread($inboxMessageId)
     {
         if ($this->setMessageRead($inboxMessageId, 0)) {
-            return $this->goBack(['index']);
+            return $this->redirect(['index']);
         }
         throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
     }
@@ -192,7 +192,7 @@ class InboxController extends Controller
     public function actionMarkAsRead($inboxMessageId)
     {
         if ($this->setMessageRead($inboxMessageId, 1)) {
-            return $this->goBack(['index']);
+            return $this->redirect(['index']);
         }
         throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
     }
@@ -398,7 +398,7 @@ class InboxController extends Controller
                 }
             }*/
         }
-        return $this->goBack(['index']);
+        return $this->redirect(['index']);
     }
 
     /**
