@@ -23,7 +23,7 @@ use yii\helpers\Url;
                 <a href="<?= Url::to(['index']) ?>">
                     <?= FA::icon(FA::_INBOX) ?>
                     <?= Yii::t('notification', 'Inbox') ?>
-                    <span class="label label-primary pull-right"><?= InboxMessage::find()->own()->andWhere(['read' => 0])->count() ?></span>
+                    <span class="label label-primary pull-right"><?= InboxMessage::find()->hideSoftDeleted()->own()->andWhere(['read' => 0])->count() ?></span>
                 </a>
             </li>
             <?php if (Yii::$app->user->can(Permission::COMPOSE_A_MESSAGE)): ?>

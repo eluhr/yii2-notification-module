@@ -21,6 +21,7 @@ use yii\mail\MessageInterface;
  * @property User $receiver
  * @property InboxMessage $next
  * @property InboxMessage $previous
+ * @property bool $deleted
  *
  */
 class InboxMessage extends ActiveRecord
@@ -55,7 +56,7 @@ class InboxMessage extends ActiveRecord
      */
     public function getNext()
     {
-        return static::find()->own()->andWhere(['<', 'id', $this->id])->orderBy(['created_at' => SORT_DESC])->one();
+        return static::find()->hideSoftDeleted()->own()->andWhere(['<', 'id', $this->id])->orderBy(['created_at' => SORT_DESC])->one();
     }
 
     /**
@@ -73,7 +74,7 @@ class InboxMessage extends ActiveRecord
      */
     public function getPrevious()
     {
-        return static::find()->own()->andWhere(['>', 'id', $this->id])->orderBy(['created_at' => SORT_ASC])->one();
+        return static::find()->hideSoftDeleted()->own()->andWhere(['>', 'id', $this->id])->orderBy(['created_at' => SORT_ASC])->one();
     }
 
     /**
@@ -98,6 +99,15 @@ class InboxMessage extends ActiveRecord
             'targetAttribute' => ['receiver_id' => 'id']
         ];
         $rules['safe-rule'] = ['read', 'safe'];
+        $rules['deleted-bool'] = [
+            'deleted',
+            'boolean',
+        ];
+        $rules['deleted-default'] = [
+            'deleted',
+            'default',
+            'value' => false
+        ];
         return $rules;
     }
 
@@ -122,5 +132,12 @@ class InboxMessage extends ActiveRecord
             }
         }
         return parent::beforeSave($insert);
+    }
+
+    public function softDelete(): bool
+    {
+        return $this->updateAttributes([
+            'deleted' => true
+        ]);
     }
 }

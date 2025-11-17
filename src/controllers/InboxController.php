@@ -23,6 +23,8 @@ use yii\web\Response;
 /**
  * @package eluhr\notification\controllers
  * @author Elias Luhr <elias.luhr@gmail.com>
+ *
+ * @property-read \eluhr\notification\Module $module
  */
 class InboxController extends Controller
 {
@@ -409,7 +411,7 @@ class InboxController extends Controller
     private function setMessageRead($inboxMessageId, $readStatus = 1)
     {
         /** @var InboxMessage|null $inboxMessageModel */
-        $inboxMessageModel = InboxMessage::find()->own()->andWhere(['id' => $inboxMessageId])->one();
+        $inboxMessageModel = InboxMessage::find()->hideSoftDeleted()->own()->andWhere(['id' => $inboxMessageId])->one();
 
         if ($inboxMessageModel === null) {
             throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
@@ -430,8 +432,27 @@ class InboxController extends Controller
      */
     private function deleteInboxMessage($inboxMessageId)
     {
-        $inboxMessageModel = InboxMessage::find()->own()->andWhere(['id' => $inboxMessageId])->one();
-        $this->deleteMessage($inboxMessageModel);
+        $message = InboxMessage::find()->own()->andWhere(['id' => $inboxMessageId])->one();
+
+        if ($message === null) {
+            throw new NotFoundHttpException(Yii::t('notification', 'Message not found.'));
+        }
+
+        $softDelete = $this->module->allowInboxMessageSoftDelete;
+
+        if ($softDelete) {
+            Yii::info('Soft deleting inbox message: ' . $inboxMessageId);
+            $isDeleted = $message->softDelete();
+        } else {
+            Yii::info('Actually deleting inbox message: ' . $inboxMessageId);
+            $isDeleted = $message->delete();
+        }
+
+        if ($isDeleted !== false) {
+            Yii::$app->session->addFlash('info', Yii::t('notification', 'Message has been removed.'));
+        } else {
+            Yii::$app->session->addFlash('error', Yii::t('notification', 'There was a problem delete this message.'));
+        }
     }
 
     /**

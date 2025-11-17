@@ -53,7 +53,7 @@ class InboxMessage extends InboxMessageModel
      */
     public function inboxSearch($params, $read)
     {
-        $query = InboxMessageModel::find();
+        $query = InboxMessageModel::find()->hideSoftDeleted();
 
         $activeDataProvider = new ActiveDataProvider([
             'query' => $query,

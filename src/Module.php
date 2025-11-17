@@ -41,4 +41,9 @@ class Module extends \yii\base\Module
      * @var bool
      */
     public $checkboxEnabled = false;
+
+    /**
+     * Instead of deleting a inbox message from the database, mark them as deleted
+    */
+    public $allowInboxMessageSoftDelete = false;
 }

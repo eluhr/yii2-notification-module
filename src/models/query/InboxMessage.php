@@ -38,4 +38,9 @@ class InboxMessage extends ActiveQuery
     {
         return $this->andWhere(['read' => 0]);
     }
+
+    public function hideSoftDeleted()
+    {
+        return $this->andWhere(['deleted' => false]);
+    }
 }

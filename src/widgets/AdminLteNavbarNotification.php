@@ -19,6 +19,7 @@ class AdminLteNavbarNotification extends Widget
     {
         $this->registerAssets();
         $inboxMessages = InboxMessage::find()
+            ->hideSoftDeleted()
             ->own()
             ->unread()
             ->joinWith('message')
