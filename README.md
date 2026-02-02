@@ -12,7 +12,15 @@ use eluhr\notification\Module as NotificationModule;
 ...
 'modules' => [
     'notification' => [
-        'class' => NotificationModule::class
+        'class' => NotificationModule::class,
+        // Optional: Override the list of possible message recipients
+        // 'possibleUsersCallback' => function() {
+        //     return \yii\helpers\ArrayHelper::map(
+        //         \Da\User\Model\User::find()->where(['blocked_at' => null])->all(),
+        //         'id',
+        //         'username'
+        //     );
+        // },
     ],
     'translatemanager' => [
         'root' => [

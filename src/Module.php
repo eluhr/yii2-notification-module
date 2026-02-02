@@ -44,6 +44,18 @@ class Module extends \yii\base\Module
 
     /**
      * Instead of deleting a inbox message from the database, mark them as deleted
-    */
+     */
     public $allowInboxMessageSoftDelete = false;
+
+    /**
+     * @var callable|null Callback to override possible users list.
+     * Should return array in format: [userId => displayName]
+     * If null, defaults to all users from User model.
+     *
+     * Example:
+     * 'possibleUsersCallback' => function() {
+     *     return ArrayHelper::map(User::find()->active()->all(), 'id', 'username');
+     * }
+     */
+    public $possibleUsersCallback;
 }

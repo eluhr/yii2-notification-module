@@ -4,6 +4,8 @@ namespace eluhr\notification\components\helpers;
 
 use Da\User\Model\User as UserModel;
 use eluhr\notification\models\MessagePreferences;
+use eluhr\notification\Module;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -17,6 +19,12 @@ class User
      */
     public static function possibleUsers()
     {
+        $module = Yii::$app->getModule('notification');
+
+        if ($module instanceof Module && is_callable($module->possibleUsersCallback)) {
+            return call_user_func($module->possibleUsersCallback);
+        }
+
         return ArrayHelper::map(UserModel::find()->all(), 'id', 'username');
     }
 
