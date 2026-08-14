@@ -129,7 +129,9 @@ class Inbox
                                         ],
                                         'linkOptions' => [
                                             'class' => 'text-danger no-border',
-                                            'data-method' => 'post'
+                                            'data-method' => 'post',
+                                            'data-confirm' => Yii::t('notification',
+                                                'Are you sure you want to delete this message?')
                                         ]
                                     ]
                                 ]
@@ -214,7 +216,9 @@ class Inbox
                                         ],
                                         'linkOptions' => [
                                             'class' => 'text-danger no-border',
-                                            'data-method' => 'post'
+                                            'data-method' => 'post',
+                                            'data-confirm' => Yii::t('notification',
+                                                'Are you sure you want to delete this user group?')
                                         ]
                                     ]
                                 ]
