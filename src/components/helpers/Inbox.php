@@ -165,10 +165,11 @@ class Inbox
             ],
             'rowOptions' => function (MessageUserGroup $model) {
                 return [
-                    'onclick' => 'window.location.href="' . Url::to([
+                    'onclick' => 'if (!event.target.closest("a, button, .dropdown-menu")) {'
+                        . ' window.location.href="' . Url::to([
                             'user-group-edit',
                             'messageUserGroupId' => $model->id
-                        ]) . '";'
+                        ]) . '"; }'
                 ];
             },
             'showHeader' => false,
